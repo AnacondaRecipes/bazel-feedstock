@@ -33,7 +33,7 @@ else
     export BAZEL_LINKOPTS="-static-libgcc:-static-libstdc++:-l%:libstdc++.a:-lm:-Wl,--disable-new-dtags"
 fi
 
-sh compile.sh
+./compile.sh
 mv output/bazel $PREFIX/bin
 
 if [[ ${HOST} =~ .*linux.* ]]; then
