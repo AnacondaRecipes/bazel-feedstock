@@ -5,6 +5,8 @@ set -v -x
 # useful for debugging:
 #export BAZEL_BUILD_OPTS="--logging=6 --subcommands --verbose_failures"
 
+export EXTRA_BAZEL_ARGS="--host_javabase=@local_jdk//:jdk"
+
 if [[ ${HOST} =~ .*darwin.* ]]; then
     # macOS: set up bazel config file for conda provided clang toolchain
     # CROSSTOOL file contains flags for statically linking libc++
