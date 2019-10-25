@@ -15,10 +15,6 @@ filegroup(
     srcs = glob(["extra_tools/**"]) + [":cc_wrapper"],
 )
 
-#filegroup(
-#    name = "cc-compiler-darwin-config"
-#          )
-
 load(
     ":cc_toolchain_config.bzl", "cc_toolchain_config"
     )

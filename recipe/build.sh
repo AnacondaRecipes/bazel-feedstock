@@ -5,8 +5,6 @@ set -v -x
 # useful for debugging:
 #export BAZEL_BUILD_OPTS="--logging=6 --subcommands --verbose_failures"
 
-export EXTRA_BAZEL_ARGS="--host_javabase=@local_jdk//:jdk"
-
 if [[ ${HOST} =~ .*darwin.* ]]; then
     # macOS: set up bazel config file for conda provided clang toolchain
     # CROSSTOOL file contains flags for statically linking libc++
@@ -17,17 +15,17 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
         -e "s:\${CONDA_BUILD_SYSROOT}:${CONDA_BUILD_SYSROOT}:" \
         cc_wrapper.sh.template > cc_wrapper.sh
     chmod +x cc_wrapper.sh
-    sed -e "s:\${PREFIX}:${BUILD_PREFIX}:" \
-        -e "s:\${BUILD_PREFIX}:${BUILD_PREFIX}:" \
-        -e "s:\${LD}:${LD}:" \
-        -e "s:\${NM}:${NM}:" \
-        -e "s:\${STRIP}:${STRIP}:" \
-        -e "s:\${LIBTOOL}:${LIBTOOL}:" \
-        -e "s:\${CONDA_BUILD_SYSROOT}:${CONDA_BUILD_SYSROOT}:" \
-        CROSSTOOL.template > CROSSTOOL
+    sed -i "" "s:\${PREFIX}:${BUILD_PREFIX}:" cc_toolchain_config.bzl
+    sed -i "" "s:\${BUILD_PREFIX}:${BUILD_PREFIX}:" cc_toolchain_config.bzl
+    sed -i "" "s:\${CONDA_BUILD_SYSROOT}:${CONDA_BUILD_SYSROOT}:" cc_toolchain_config.bzl
+    sed -i "" "s:\${LD}:${LD}:" cc_toolchain_config.bzl
+    sed -i "" "s:\${NM}:${NM}:" cc_toolchain_config.bzl
+    sed -i "" "s:\${STRIP}:${STRIP}:" cc_toolchain_config.bzl
+    sed -i "" "s:\${LIBTOOL}:${LIBTOOL}:" cc_toolchain_config.bzl
     cd ..
     export BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
-    export BAZEL_BUILD_OPTS="--verbose_failures --crosstool_top=//custom_clang_toolchain:toolchain"
+    export BAZEL_BUILD_OPTS="--verbose_failures --crosstool_top=//custom_clang_toolchain:toolchain --action_env=PREFIX --action_env=CONDA_BUILD_SYSROOT"
+    export CFLAGS="$CFLAGS -fno-lto"
 else
     # Linux - set flags for statically linking libstdc++
     # xref: https://github.com/bazelbuild/bazel/blob/0.12.0/tools/cpp/unix_cc_configure.bzl#L257-L258
