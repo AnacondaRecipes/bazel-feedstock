@@ -1,6 +1,7 @@
-# Adapted from https://docs.bazel.build/versions/0.26.0/tutorial/cc-toolchain-config.html
+# Adapted from the following links and pulling in options from old CROSSTOOL.template
+# https://docs.bazel.build/versions/0.26.0/tutorial/cc-toolchain-config.html
+# https://github.com/bazelbuild/bazel/blob/4dfc83d5f11e9190e9e25dee4c7dc2a71cd7b8fd/tools/osx/crosstool/cc_toolchain_config.bzl
 # https://docs.bazel.build/versions/master/skylark/lib/cc_common.html#create_cc_toolchain_config_info
-# pulling in options from old CROSSTOOL.template
 
 load("@bazel_tools//tools/cpp:cc_toolchain_config_lib.bzl",
      "feature",
