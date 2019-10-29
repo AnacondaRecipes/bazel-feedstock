@@ -11,4 +11,4 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
 fi
 cp -r ${RECIPE_DIR}/tutorial .
 cd tutorial
-bazel build "${BAZEL_BUILD_OPTS[@]}" //main:hello-world
+#bazel build "${BAZEL_BUILD_OPTS[@]}" //main:hello-world

@@ -3,7 +3,7 @@
 set -v -x
 
 # useful for debugging:
-#export BAZEL_BUILD_OPTS="--logging=6 --subcommands --verbose_failures"
+export BAZEL_BUILD_OPTS="--logging=6 --subcommands --verbose_failures"
 
 if [[ ${HOST} =~ .*darwin.* ]]; then
     # macOS: set up bazel config file for conda provided clang toolchain
@@ -24,8 +24,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     sed -i "" "s:\${LIBTOOL}:${LIBTOOL}:" cc_toolchain_config.bzl
     cd ..
     export BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
-    export BAZEL_BUILD_OPTS="--verbose_failures --crosstool_top=//custom_clang_toolchain:toolchain --action_env=PREFIX --action_env=CONDA_BUILD_SYSROOT"
-    export CFLAGS="$CFLAGS -fno-lto"
+    export BAZEL_BUILD_OPTS="--verbose_failures --crosstool_top=//custom_clang_toolchain:toolchain"
 else
     # Linux - set flags for statically linking libstdc++
     # xref: https://github.com/bazelbuild/bazel/blob/0.12.0/tools/cpp/unix_cc_configure.bzl#L257-L258

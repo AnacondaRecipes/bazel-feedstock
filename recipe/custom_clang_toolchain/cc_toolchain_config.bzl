@@ -49,15 +49,60 @@ def _impl(ctx):
         ),
     ]
 
+    all_compile_actions = [
+        ACTION_NAMES.c_compile,
+        ACTION_NAMES.cpp_compile,
+        ACTION_NAMES.linkstamp_compile,
+        ACTION_NAMES.assemble,
+        ACTION_NAMES.preprocess_assemble,
+        ACTION_NAMES.cpp_header_parsing,
+        ACTION_NAMES.cpp_module_compile,
+        ACTION_NAMES.cpp_module_codegen,
+        ACTION_NAMES.clif_match,
+        ACTION_NAMES.lto_backend,
+    ]
+
+    all_cpp_compile_actions = [
+        ACTION_NAMES.cpp_compile,
+        ACTION_NAMES.linkstamp_compile,
+        ACTION_NAMES.cpp_header_parsing,
+        ACTION_NAMES.cpp_module_compile,
+        ACTION_NAMES.cpp_module_codegen,
+        ACTION_NAMES.clif_match,
+    ]
+
+    preprocessor_compile_actions = [
+        ACTION_NAMES.c_compile,
+        ACTION_NAMES.cpp_compile,
+        ACTION_NAMES.linkstamp_compile,
+        ACTION_NAMES.preprocess_assemble,
+        ACTION_NAMES.cpp_header_parsing,
+        ACTION_NAMES.cpp_module_compile,
+        ACTION_NAMES.clif_match,
+    ]
+
+    codegen_compile_actions = [
+        ACTION_NAMES.c_compile,
+        ACTION_NAMES.cpp_compile,
+        ACTION_NAMES.linkstamp_compile,
+        ACTION_NAMES.assemble,
+        ACTION_NAMES.preprocess_assemble,
+        ACTION_NAMES.cpp_module_codegen,
+        ACTION_NAMES.lto_backend,
+    ]
+
+    all_link_actions = [
+        ACTION_NAMES.cpp_link_executable,
+        ACTION_NAMES.cpp_link_dynamic_library,
+        ACTION_NAMES.cpp_link_nodeps_dynamic_library,
+    ]
+
     compiler_flags = feature(
         name = "compiler_flags",
         enabled = True,
         flag_sets = [
             flag_set(
-                actions = [
-                    ACTION_NAMES.c_compile,
-                    ACTION_NAMES.cpp_compile,
-                ],
+                actions = all_compile_actions,
                 flag_groups = [
                     flag_group(
                         flags = [
@@ -78,22 +123,91 @@ def _impl(ctx):
         ],
     )
 
+    objcpp_flags = feature(
+        name = "objcpp_flags",
+        enabled = True,
+        flag_sets = [
+            flag_set(
+                actions = [
+                    ACTION_NAMES.objcpp_compile,
+                ],
+                flag_groups = [
+                    flag_group(
+                        flags = [
+                            "-march",
+                            "core2",
+                            "-mtune=haswell",
+                            "-mssse3",
+                            "-stdlib=libc++",
+                            "-std=gnu++11",
+                            "-DOS_MACOSX",
+                            "-fno-autolink",
+                            ],
+                    ),
+                ],
+            ),
+        ],
+    )
+
     cxx_flags = feature(
         name = "cxx_flags",
         enabled = True,
         flag_sets = [
             flag_set(
                 actions = [
+                    ACTION_NAMES.assemble,
+                    ACTION_NAMES.preprocess_assemble,
+                    ACTION_NAMES.linkstamp_compile,
                     ACTION_NAMES.cpp_compile,
+                    ACTION_NAMES.cpp_header_parsing,
+                    ACTION_NAMES.cpp_module_compile,
+                    ACTION_NAMES.cpp_module_codegen,
+                    ACTION_NAMES.lto_backend,
+                    ACTION_NAMES.clif_match,
                 ],
                 flag_groups = [
                     flag_group(
                         flags = [
                             "-stdlib=libc++",
                             "-fvisibility-inlines-hidden",
-                            "-std=c++14",
+                            "-std=gnu++11",
                             "-fmessage-length=0"
                             ],
+                    ),
+                ],
+            ),
+        ],
+    )
+
+    toolchain_include_directories_feature = feature(
+        name = "toolchain_include_directories",
+        enabled = True,
+        flag_sets = [
+            flag_set(
+                actions = [
+                    ACTION_NAMES.assemble,
+                    ACTION_NAMES.preprocess_assemble,
+                    ACTION_NAMES.linkstamp_compile,
+                    ACTION_NAMES.c_compile,
+                    ACTION_NAMES.cpp_compile,
+                    ACTION_NAMES.cpp_header_parsing,
+                    ACTION_NAMES.cpp_module_compile,
+                    ACTION_NAMES.cpp_module_codegen,
+                    ACTION_NAMES.lto_backend,
+                    ACTION_NAMES.clif_match,
+                ],
+                flag_groups = [
+                    flag_group(
+                        flags = [
+                            "-isystem",
+                            "${BUILD_PREFIX}/include/c++/v1",
+                            "-isystem",
+                            "${BUILD_PREFIX}/lib/clang/4.0.1/include",
+                            "-isystem",
+                            "${CONDA_BUILD_SYSROOT}/usr/include",
+                            "-isystem",
+                            "${CONDA_BUILD_SYSROOT}/System/Library/Frameworks",
+                        ],
                     ),
                 ],
             ),
@@ -105,10 +219,17 @@ def _impl(ctx):
         flag_sets = [
             flag_set (
                 actions = [
-                    "ACTION_NAMES.cpp_link_static_library",
-                    "ACTION_NAMES.cpp_link_dynamic_library",
-                    "ACTION_NAMES.cpp_link_executable",
-                    "ACTION_NAMES.cpp_link_nodeps_dynamic_library",
+                    ACTION_NAMES.assemble,
+                    ACTION_NAMES.preprocess_assemble,
+                    ACTION_NAMES.linkstamp_compile,
+                    ACTION_NAMES.c_compile,
+                    ACTION_NAMES.cpp_compile,
+                    ACTION_NAMES.objcpp_compile,
+                    ACTION_NAMES.cpp_header_parsing,
+                    ACTION_NAMES.cpp_module_compile,
+                    ACTION_NAMES.cpp_module_codegen,
+                    ACTION_NAMES.lto_backend,
+                    ACTION_NAMES.clif_match,
                 ],
                 flag_groups = [
                     flag_group(
@@ -132,6 +253,18 @@ def _impl(ctx):
         ],
     )
 
+    link_libcpp_feature = feature(
+        name = "link_libc++",
+        enabled = True,
+        flag_sets = [
+            flag_set(
+                actions = all_link_actions +
+                          ["objc-executable", "objc++-executable"],
+                flag_groups = [flag_group(flags = ["-lc++"])],
+            ),
+        ],
+    )
+
     supports_pic_feature = feature(
         name = "supports_pic",
         enabled = True
@@ -148,8 +281,16 @@ def _impl(ctx):
         flag_sets = [
             flag_set(
                 actions = [
+                    ACTION_NAMES.assemble,
+                    ACTION_NAMES.preprocess_assemble,
+                    ACTION_NAMES.linkstamp_compile,
                     ACTION_NAMES.c_compile,
                     ACTION_NAMES.cpp_compile,
+                    ACTION_NAMES.cpp_header_parsing,
+                    ACTION_NAMES.cpp_module_compile,
+                    ACTION_NAMES.cpp_module_codegen,
+                    ACTION_NAMES.lto_backend,
+                    ACTION_NAMES.clif_match,
                 ],
                 flag_groups = [
                     flag_group(
@@ -173,8 +314,16 @@ def _impl(ctx):
         flag_sets = [
             flag_set(
                 actions = [
+                    ACTION_NAMES.assemble,
+                    ACTION_NAMES.preprocess_assemble,
+                    ACTION_NAMES.linkstamp_compile,
                     ACTION_NAMES.c_compile,
                     ACTION_NAMES.cpp_compile,
+                    ACTION_NAMES.cpp_header_parsing,
+                    ACTION_NAMES.cpp_module_compile,
+                    ACTION_NAMES.cpp_module_codegen,
+                    ACTION_NAMES.lto_backend,
+                    ACTION_NAMES.clif_match,
                 ],
                 flag_groups = [
                     flag_group(
@@ -206,7 +355,7 @@ def _impl(ctx):
         abi_libc_version = "local",
         tool_paths = tool_paths,
         cxx_builtin_include_directories = cxx_builtin_include_directories,
-        features = [compiler_flags, cxx_flags, supports_pic_feature, linker_flags, supports_dynamic_linker],
+        features = [toolchain_include_directories_feature, compiler_flags, cxx_flags, supports_pic_feature, linker_flags, supports_dynamic_linker, link_libcpp_feature, objcpp_flags],
     )
 
 cc_toolchain_config = rule(
