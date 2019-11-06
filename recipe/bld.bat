@@ -25,6 +25,8 @@ FOR /F "delims=" %%i IN ('cygpath.exe -u "%SYSTEMDRIVE%\t"') DO set "TMPDIR=%%i"
 set MSYSTEM=MINGW%ARCH%
 set MSYS2_PATH_TYPE=inherit
 set CHERE_INVOKING=1
+set "BAZEL_VC=%VSINSTALLDIR%VC"
+set "BAZEL_VS=%VSINSTALLDIR%"
 bash -lc "%SRC_DIR%"/compile.sh
 if errorlevel 1 exit 1
 
