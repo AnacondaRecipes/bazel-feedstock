@@ -10,6 +10,7 @@ source:
   patches:
     - 0002-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
     - 0005-Use-LSFindApplicationForInfo-for-locating-xcode.patch  # [osx]
+    - 0001-remove-change-that-breaks-older-xcode-versions.patch # [osx]
 
 build:
   number: 0
@@ -20,7 +21,7 @@ build:
   skip: True  # [win32]
   # libc++/libstdc++: statically linked
   ignore_run_exports:
-    - libcxx
+    - libcxx # [not osx]
     - libstdcxx-ng
 
 requirements:
