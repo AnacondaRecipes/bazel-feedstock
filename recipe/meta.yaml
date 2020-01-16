@@ -1,4 +1,4 @@
-{% set version = "0.26.1" %}
+{% set version = "0.28.1" %}
 
 package:
   name: bazel
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/bazelbuild/bazel/releases/download/{{ version }}/bazel-{{ version }}-dist.zip
-  sha256: c0e94f8f818759f3f67af798c38683520c540f469cb41aea8f5e5a0e43f11600
+  sha256: 2cea463d611f5255d2f3d41c8de5dcc0961adccb39cf0ac036f07070ba720314  
   patches:
     - 0002-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
     - 0005-Use-LSFindApplicationForInfo-for-locating-xcode.patch  # [osx]
