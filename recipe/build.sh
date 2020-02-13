@@ -5,6 +5,13 @@ set -v -x
 # useful for debugging:
 export BAZEL_BUILD_OPTS="--logging=6 --subcommands --verbose_failures"
 
+# Even with the above arguments, subcommands with long argument lists will be
+# passed via .params files. These files are automatically removed, even when a build
+# fails. To examine these files, remove the cleanup in scripts/bootstrap/buildenv.sh
+# By default these files are stored in in /tmp. This can be changed by setting
+# the TMPDIR environment variable. It might be necessary to pass
+# "--materialize_param_files" to Bazel.
+
 if [[ ${HOST} =~ .*darwin.* ]]; then
     # macOS: set up bazel config file for conda provided clang toolchain
     # CROSSTOOL file contains flags for statically linking libc++
