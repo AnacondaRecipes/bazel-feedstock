@@ -33,6 +33,27 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     export BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
     export BAZEL_BUILD_OPTS="--verbose_failures --crosstool_top=//custom_clang_toolchain:toolchain"
 else
+    # The bazel binary is a self extracting zip file which contains binaries
+    # and libraries, some of which are linked to libstdc++.
+    # At runtime a compatible libstdc++ must be available for these libraries
+    # and binaries to work.
+    # Since the libstdc++ used by conda to build bazel is newer than the one
+    # available of some systems, for example CentOS 6, the system cannot be
+    # relied upon to provide this library.
+    # Typically libstdc++ is dynamically linked to libraries and binaries in
+    # conda packages and the RPATH of these files are patched to point to
+    # $PREFIX/lib as a relative path.
+    # Unfortunately bazel is unpacked outside of the conda environment,
+    # so this technique cannot be used.
+    # Rather libstdc++ (and libgcc) are statically linked in the binaries and
+    # libraries inside of self extracting zip and bazel itself.
+    # Another possible technique would be:
+    # * Unpack the zip after it is built
+    # * Copy libstdc++ and any other libraries into the unpacked directory.
+    # * Adjust the RPATH of all binaries and libraries to point to the directory
+    #   containing these libraries with a relative path.
+    # * Repack the directory as a self extracting zip
+
     # Linux - set flags for statically linking libstdc++
     # xref: https://github.com/bazelbuild/bazel/blob/0.12.0/tools/cpp/unix_cc_configure.bzl#L257-L258
     # xref: https://github.com/bazelbuild/bazel/blob/0.12.0/tools/cpp/lib_cc_configure.bzl#L25-L39
