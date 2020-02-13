@@ -59,6 +59,25 @@ else
     # xref: https://github.com/bazelbuild/bazel/blob/0.12.0/tools/cpp/lib_cc_configure.bzl#L25-L39
     export BAZEL_LINKOPTS="-static-libgcc:-static-libstdc++:-l%:libstdc++.a:-lm:-Wl,--disable-new-dtags"
     export EXTRA_BAZEL_ARGS="--host_javabase=@local_jdk//:jdk"
+
+    # -static-libstdc++ only works with g++, gcc ignores the argument.  Bazel
+    # uses a single compiler, $CC, to compile and link C and C++. Here we
+    # define $CC as a wrapper script which dispatches to g++ if the arguments
+    # passes contain a params file or a c++ argument (e.g. --std=c++11).
+    # see:
+    # https://github.com/bazelbuild/bazel/issues/4644
+    # https://github.com/bazelbuild/bazel/issues/2840
+    cat > wrapper.sh << EOF
+#!/bin/bash
+if [[ "\$@" == *"params"* ]] || [[ "\$@" == *"c++"* ]] ; then
+    ${GXX} "\$@"
+else
+    ${GCC} "\$@"
+fi
+EOF
+    chmod +x wrapper.sh
+    cp wrapper.sh ${BUILD_PREFIX}/bin/
+    export CC=${BUILD_PREFIX}/bin/wrapper.sh
 fi
 
 ./compile.sh
