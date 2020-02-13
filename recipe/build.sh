@@ -58,6 +58,7 @@ else
     # xref: https://github.com/bazelbuild/bazel/blob/0.12.0/tools/cpp/unix_cc_configure.bzl#L257-L258
     # xref: https://github.com/bazelbuild/bazel/blob/0.12.0/tools/cpp/lib_cc_configure.bzl#L25-L39
     export BAZEL_LINKOPTS="-static-libgcc:-static-libstdc++:-l%:libstdc++.a:-lm:-Wl,--disable-new-dtags"
+    export EXTRA_BAZEL_ARGS="--host_javabase=@local_jdk//:jdk"
 fi
 
 ./compile.sh
