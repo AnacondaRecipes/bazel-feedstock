@@ -10,6 +10,7 @@ source:
   patches:
     - 0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
     - 0002-do-not-use-enable-gold-unless-supported.patch # [unix]
+    - 0005-Use-LSFindApplicationForInfo-for-locating-xcode.patch # [osx]
 
 build:
   number: 0
@@ -22,6 +23,8 @@ build:
   ignore_run_exports:
     - libcxx # [not osx]
     - libstdcxx-ng
+  missing_dso_whitelist:
+    - "*/libc++.1.dylib" # [osx]
 
 requirements:
   build:
