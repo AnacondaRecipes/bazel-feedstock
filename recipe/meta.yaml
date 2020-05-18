@@ -1,4 +1,4 @@
-{% set version = "0.29.1" %}
+{% set version = "2.0.0" %}
 
 package:
   name: bazel
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/bazelbuild/bazel/releases/download/{{ version }}/bazel-{{ version }}-dist.zip
-  sha256: 872a52cff208676e1169b3e1cae71b1fe572c4109cbd66eab107d8607c378de5
+  sha256: 724da3c656f68e787a86ebb9844773aa1c2e3a873cc39462a8f1b336153d6cbb
   patches:
     - 0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
     - 0002-do-not-use-enable-gold-unless-supported.patch # [unix]
