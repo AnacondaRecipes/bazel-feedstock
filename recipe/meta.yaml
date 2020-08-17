@@ -12,6 +12,7 @@ source:
     - 0002-do-not-use-enable-gold-unless-supported.patch # [unix]
     - 0005-Use-LSFindApplicationForInfo-for-locating-xcode.patch # [osx]
     - osx_os_log.patch  # [osx]
+    - fix_netrc_protocol.patch  # [osx]
 
 build:
   number: 0
