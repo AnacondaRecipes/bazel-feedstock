@@ -11,6 +11,7 @@ source:
     - 0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
     - 0002-do-not-use-enable-gold-unless-supported.patch # [unix]
     - 0005-Use-LSFindApplicationForInfo-for-locating-xcode.patch # [osx]
+    - osx_os_log.patch  # [osx]
 
 build:
   number: 0
@@ -31,7 +32,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - patch  # [unix]
-    - python
+    - python >=3
   host:
     - openjdk >=8
     - posix  # [win]
