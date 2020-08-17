@@ -1,4 +1,4 @@
-{% set version = "2.0.0" %}
+{% set version = "3.1.0" %}
 
 package:
   name: bazel
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/bazelbuild/bazel/releases/download/{{ version }}/bazel-{{ version }}-dist.zip
-  sha256: 724da3c656f68e787a86ebb9844773aa1c2e3a873cc39462a8f1b336153d6cbb
+  sha256: d7f40d0cac95a06cea6cb5b7f7769085257caebc3ee84269dd9298da760d5615
   patches:
     - 0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
     - 0002-do-not-use-enable-gold-unless-supported.patch # [unix]
@@ -18,7 +18,7 @@ build:
   binary_relocation: False  # [osx]
   skip: True  # [linux32]
   skip: True  # [win and vc<14]
-  skip: True  # [win32]
+  skip: True  # [win32 or py<30]
   # libc++/libstdc++: statically linked
   ignore_run_exports:
     - libcxx # [not osx]
@@ -31,6 +31,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - patch  # [unix]
+    - python
   host:
     - openjdk >=8
     - posix  # [win]
