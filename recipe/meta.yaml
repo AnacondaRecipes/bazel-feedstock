@@ -8,40 +8,41 @@ source:
   url: https://github.com/bazelbuild/bazel/releases/download/{{ version }}/bazel-{{ version }}-dist.zip
   sha256: d350f80e70654932db252db380d2ec0144a00e86f8d9f2b4c799ffdb48e9cdd1
   patches:
-    - 0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
-    - 0002-do-not-use-enable-gold-unless-supported.patch # [unix]
-    - 0005-Use-LSFindApplicationForInfo-for-locating-xcode.patch # [osx]
-    - osx_os_log.patch  # [osx]
-    - fix_netrc_protocol.patch  # [osx]
+    - 0001-allow-args-to-be-passed-to-bazel_build.patch
+    - 0002-linux-sandbox-don-t-assume-lrt-D__STDC_FORMAT_MACROS.patch  # [linux]
+    - 0003-Build-with-native-dependencies.patch  # [unix]
+    - 0004-zipper-from-conda-package.patch  # [build_platform != target_platform]
+    - 0005-grpc-java-plugin-build.patch     # [build_platform != target_platform]
+    - 0006-bazel-bin-loader-path.patch      # [osx]
+    - 0007-link-libprotobuf-grpc-java.patch  # [build_platform == target_platform]
+    - 0008-adjust-cross-bazel-resultpath.patch  # [build_platform != target_platform]
 
 build:
   number: 0
-  ignore_prefix_files: True
-  binary_relocation: False  # [osx]
-  skip: True  # [linux32]
-  skip: True  # [win and vc<14]
-  skip: True  # [win32 or py<30]
-  # libc++/libstdc++: statically linked
-  ignore_run_exports:
-    - libcxx # [not osx]
-    - libstdcxx-ng
-  missing_dso_whitelist:
-    - "*/libc++.1.dylib" # [osx]
+  ignore_prefix_files: true
+  binary_relocation: false
 
 requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - patch  # [unix]
-    - python >=3
+    - sed               # [unix]
+    - openjdk >=8       # [unix]
+    - grpc-cpp          # [unix]
+    - grpc_java_plugin  # [osx]
+    - libprotobuf       # [unix]
+    - ijar              # [build_platform != target_platform]
   host:
-    - openjdk >=8
-    - posix  # [win]
+    - grpc-cpp  # [unix]
+    - libprotobuf  # [unix]
+    - openjdk >=8  # [win]
     - unzip  # [linux]
-    - zip    # [linux]
+    - zip  # [linux]
+    - posix  # [win]
   run:
     - openjdk >=8
     - posix  # [win]
+    - ijar  # [build_platform != target_platform]
 
 test:
   requires:
@@ -49,11 +50,7 @@ test:
     - {{ compiler('cxx') }}
   commands:
     - bazel -h
-    - readelf -d $PREFIX/bin/bazel  # [linux]
-    - conda inspect linkages -p $PREFIX bazel # [unix]
-    # manually check that -lstdc++ appears in the bundled unix_cc_configure.bzl
-    # tar xf /path/to/pkgs/bazel-0.5.4-hf484d3e_0.tar.bz2 bin/bazel
-    # unzip -p bin/bazel embedded_tools/tools/cpp/unix_cc_configure.bzl | grep stdc++
+    - bazel version
 
 about:
   home: https://www.bazel.io/
@@ -65,11 +62,14 @@ about:
     extensible framework that you can use to develop your own build rules.
   dev_url: https://github.com/bazelbuild/bazel
   doc_url: https://www.bazel.io/versions/master/docs/install.html
-  license: Apache 2.0
+  license: Apache-2.0
   license_family: Apache
   license_file: LICENSE
 
 extra:
   recipe-maintainers:
-    - jjhelmus
     - nehaljwani
+    - abhi18av
+    - jschueller
+    - adrianchia
+    - xhochy

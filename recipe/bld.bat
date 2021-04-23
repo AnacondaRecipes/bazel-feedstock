@@ -7,7 +7,7 @@ set "saved_source_dir=%SRC_DIR%"
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%PYTHON%"') DO set "BAZEL_PYTHON=%%i"
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%LIBRARY_PREFIX%\usr\bin\bash.exe"') DO set "BAZEL_SH=%%i"
 
-FOR /F "delims=" %%i IN ('cygpath.exe -u -p "%PATH%"') DO set "PATH_OVERRIDE=%%i"
+:: FOR /F "delims=" %%i IN ('cygpath.exe -u -p "%PATH%"') DO set "PATH_OVERRIDE=%%i"
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%LIBRARY_PREFIX%"') DO set "LIBRARY_PREFIX=%%i"
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%PREFIX%"') DO set "PREFIX=%%i"
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%PYTHON%"') DO set "PYTHON=%%i"
@@ -21,13 +21,17 @@ FOR /F "delims=" %%i IN ('cygpath.exe -u "%PREFIX%"') DO set "JAVA_HOME=%%i/Libr
 
 :: Need a very short TMPDIR otherwise we hit the max path limit while compiling bazel
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%SYSTEMDRIVE%\t"') DO set "TMPDIR=%%i"
+FOR /F "delims=" %%i IN ('cygpath.exe -u "%SYSTEMDRIVE%\t"') DO set "TEMP=%%i"
 
 set MSYSTEM=MINGW%ARCH%
 set MSYS2_PATH_TYPE=inherit
 set CHERE_INVOKING=1
-set "BAZEL_VC=%VSINSTALLDIR%VC"
+:: set "BAZEL_VC=%VSINSTALLDIR%VC"
 set "BAZEL_VS=%VSINSTALLDIR%"
-bash -lc "%SRC_DIR%"/compile.sh
+set "EXTRA_BAZEL_ARGS=--host_javabase=@local_jdk//:jdk"
+
+
+bash -lc ./compile.sh
 if errorlevel 1 exit 1
 
-copy %saved_source_dir%\output\bazel.exe %LIBRARY_BIN%\
+copy output\bazel.exe %LIBRARY_BIN%\

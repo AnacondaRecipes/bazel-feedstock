@@ -53,6 +53,7 @@ done
 
 
 # Call the C++ compiler
+echo CONDA_BUILD_SYSROOT=${CONDA_BUILD_SYSROOT} ${CLANG} "$@"
 CONDA_BUILD_SYSROOT=${CONDA_BUILD_SYSROOT} ${CLANG} "$@"
 
 function get_library_path() {
