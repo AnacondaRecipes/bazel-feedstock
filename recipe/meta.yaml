@@ -1,4 +1,4 @@
-{% set version = "3.1.0" %}
+{% set version = "3.7.0" %}
 
 package:
   name: bazel
@@ -6,13 +6,15 @@ package:
 
 source:
   url: https://github.com/bazelbuild/bazel/releases/download/{{ version }}/bazel-{{ version }}-dist.zip
-  sha256: d7f40d0cac95a06cea6cb5b7f7769085257caebc3ee84269dd9298da760d5615
+  sha256: 63873623917c756d1be49ff4d5fc23049736180e6b9a7d5236c6f204eddae3cc
   patches:
     - 0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
     - 0002-do-not-use-enable-gold-unless-supported.patch # [unix]
     - 0005-Use-LSFindApplicationForInfo-for-locating-xcode.patch # [osx]
     - osx_os_log.patch  # [osx]
     - fix_netrc_protocol.patch  # [osx]
+    - missing_inttype_h.patch
+    - patch2.patch
 
 build:
   number: 0
