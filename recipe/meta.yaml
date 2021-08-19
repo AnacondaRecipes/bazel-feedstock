@@ -29,6 +29,7 @@ build:
     - libstdcxx-ng
   missing_dso_whitelist:
     - "*/libc++.1.dylib" # [osx]
+    - $RPATH/libstdc++.so   # [linux]
 
 requirements:
   build:
