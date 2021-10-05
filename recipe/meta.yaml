@@ -27,8 +27,9 @@ build:
   ignore_run_exports:
     - libcxx # [not osx]
     - libstdcxx-ng
-  missing_dso_whitelist:
-    - "*/libc++.1.dylib" # [osx]
+  missing_dso_whitelist:       # [linux or osx]
+    - "*/libc++.1.dylib"       # [osx]
+    - "$RPATH/libstdc++.so.6"  # [linux]
 
 requirements:
   build:
