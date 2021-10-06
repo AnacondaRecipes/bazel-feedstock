@@ -38,12 +38,12 @@ requirements:
     - patch  # [unix]
     - python >=3
   host:
-    - openjdk >=11
+    - openjdk >=8
     - posix  # [win]
     - unzip  # [linux]
     - zip    # [linux]
   run:
-    - openjdk >=11
+    - openjdk >=8
     - posix  # [win]
 
 test:
