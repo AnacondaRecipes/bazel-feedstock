@@ -70,7 +70,11 @@ else
     cat > wrapper.sh << EOF
 #!/bin/bash
 if [[ "\$@" == *"params"* ]] || [[ "\$@" == *"c++"* ]] ; then
-    ${GXX} "\$@"
+    # At least one external project (abseil) is missing an explicit include
+    # <limits>. Since it seems impossible to patch abseil while it is being
+    # pulled in (indirectly) through Bazel's own dependency management at
+    # build time, we make the compiler include it per default.
+    ${GXX} -include limits "\$@"
 else
     ${GCC} "\$@"
 fi
@@ -79,6 +83,9 @@ EOF
     cp wrapper.sh ${BUILD_PREFIX}/bin/
     export CC=${BUILD_PREFIX}/bin/wrapper.sh
 fi
+
+# Avoid using ~/.bazel/...
+export BAZEL_WRKDIR="${BUILD_PREFIX}/../.bazel"
 
 ./compile.sh
 mv output/bazel $PREFIX/bin

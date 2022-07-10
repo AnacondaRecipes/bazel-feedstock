@@ -8,21 +8,20 @@ source:
   url: https://github.com/bazelbuild/bazel/releases/download/{{ version }}/bazel-{{ version }}-dist.zip
   sha256: 9981d0d53a356c4e87962847750a97c9e8054e460854748006c80f0d7e2b2d33
   patches:
-    - 0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
-    - 0002-do-not-use-enable-gold-unless-supported.patch # [unix]
-    - 0005-Use-LSFindApplicationForInfo-for-locating-xcode.patch # [osx]
-    - osx_os_log.patch  # [osx]
-    - fix_netrc_protocol.patch  # [osx]
-    - missing_inttype_h.patch
-    - patch2.patch
+    - patches/0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
+    - patches/0002-do-not-use-enable-gold-unless-supported.patch  # [unix]
+    - patches/0003-Use-LSFindApplicationForInfo-for-locating-xcode.patch  # [osx]
+    - patches/0004-osx_os_log.patch  # [osx]
+    - patches/0005-fix_netrc_protocol.patch  # [osx]
+    - patches/0006-missing_inttype_h.patch
+    - patches/0007-patch2.patch
+    - patches/0008-include-limits.patch
 
 build:
   number: 0
   ignore_prefix_files: True
   binary_relocation: False  # [osx]
-  skip: True  # [linux32]
-  skip: True  # [win and vc<14]
-  skip: True  # [win32 or py<30]
+  skip: True  # [not (linux64 or aarch64 or win64 or osx)]
   # libc++/libstdc++: statically linked
   ignore_run_exports:
     - libcxx # [not osx]
@@ -59,6 +58,9 @@ test:
 
 about:
   home: https://www.bazel.io/
+  license: Apache-2.0
+  license_family: Apache
+  license_file: LICENSE
   summary: build system originally authored by Google
   description: |
     Bazel is Google's own build tool, now publicly available in Beta. Bazel has
@@ -67,9 +69,6 @@ about:
     extensible framework that you can use to develop your own build rules.
   dev_url: https://github.com/bazelbuild/bazel
   doc_url: https://www.bazel.io/versions/master/docs/install.html
-  license: Apache 2.0
-  license_family: Apache
-  license_file: LICENSE
 
 extra:
   recipe-maintainers:
