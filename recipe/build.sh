@@ -2,6 +2,10 @@
 
 set -v -x
 
+if [[ "$target_platform" =~ linux.* ]] && [ ! -f "${BUILD_PREFIX}/bin/readelf" ]; then
+    ln -s "${HOST}-readelf" "${BUILD_PREFIX}/bin/readelf"
+fi
+
 # useful for debugging:
 export BAZEL_BUILD_OPTS="--logging=6 --subcommands --verbose_failures"
 
