@@ -1,7 +1,18 @@
-Index: work/src/main/native/unix_jni_darwin.cc
-===================================================================
---- work.orig/src/main/native/unix_jni_darwin.cc
-+++ work/src/main/native/unix_jni_darwin.cc
+diff -urN a/src/main/native/BUILD b/src/main/native/BUILD
+--- a/src/main/native/BUILD	1980-01-01 00:00:00.000000000 +0300
++++ b/src/main/native/BUILD	2022-07-11 15:54:57.874189982 +0300
+@@ -63,7 +63,7 @@
+     ],
+     includes = ["."],  # For jni headers.
+     linkopts = select({
+-        "//src/conditions:darwin": ["-framework CoreServices"],
++        "//src/conditions:darwin": ["-framework CoreServices -framework IOKit"],
+         "//conditions:default": [],
+     }),
+     linkshared = 1,
+diff -urN a/src/main/native/unix_jni_darwin.cc b/src/main/native/unix_jni_darwin.cc
+--- a/src/main/native/unix_jni_darwin.cc	1980-01-01 00:00:00.000000000 +0300
++++ b/src/main/native/unix_jni_darwin.cc	2022-07-11 15:54:07.690646751 +0300
 @@ -19,7 +19,8 @@
  #include <fcntl.h>
  #include <IOKit/IOMessage.h>
@@ -12,7 +23,7 @@ Index: work/src/main/native/unix_jni_darwin.cc
  #include <stdlib.h>
  #include <string.h>
  #include <sys/stat.h>
-@@ -141,6 +142,7 @@ static dispatch_queue_t JniDispatchQueue
+@@ -141,6 +142,7 @@
    return queue;
  }
  
@@ -20,26 +31,11 @@ Index: work/src/main/native/unix_jni_darwin.cc
  // Log used for all of our anomaly logging.
  // Logging can be traced using:
  // `log stream -level debug --predicate '(subsystem == "build.bazel")'`
-@@ -153,6 +155,7 @@ static os_log_t JniOSLog() {
-   });
+@@ -161,6 +163,7 @@
+   }
    return log;
  }
 +#endif
  
- // Protects all of the g_sleep_state_* statics.
- // value is "leaked" intentionally because std::mutex is not trivially
-Index: work/src/main/native/BUILD
-===================================================================
---- work.orig/src/main/native/BUILD
-+++ work/src/main/native/BUILD
-@@ -68,8 +68,8 @@ cc_binary(
-     ],
-     includes = ["."],  # For jni headers.
-     linkopts = select({
--        "//src/conditions:darwin": ["-framework CoreServices"],
--        "//src/conditions:darwin_x86_64": ["-framework CoreServices"],
-+        "//src/conditions:darwin": ["-framework CoreServices -framework IOKit"],
-+        "//src/conditions:darwin_x86_64": ["-framework CoreServices -framework IOKit"],
-         "//conditions:default": [],
-     }),
-     linkshared = 1,
+ // The macOS implementation asserts that `msg` be a string literal (not just a
+ // const char*), so we cannot use a function.
