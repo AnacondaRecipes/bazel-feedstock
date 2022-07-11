@@ -27,12 +27,27 @@ cc_toolchain_suite(
     name = "toolchain",
     toolchains = {
         "darwin|compiler": ":cc-compiler-darwin",
+        "darwin_arm64|compiler": ":cc-compiler-darwin",
         "darwin": ":cc-compiler-darwin",
+        "darwin_arm64": ":cc-compiler-darwin",
     },
 )
 
 cc_toolchain(
     name = "cc-compiler-darwin",
+    all_files = ":compiler_deps",
+    compiler_files = ":compiler_deps",
+    toolchain_identifier = "local",
+    toolchain_config = ":cc-compiler-darwin-config",
+    dwp_files = ":empty",
+    linker_files = ":compiler_deps",
+    objcopy_files = ":empty",
+    strip_files = ":empty",
+    supports_param_files = 0,
+)
+
+cc_toolchain(
+    name = "cc-compiler-darwin_arm64",
     all_files = ":compiler_deps",
     compiler_files = ":compiler_deps",
     toolchain_identifier = "local",
