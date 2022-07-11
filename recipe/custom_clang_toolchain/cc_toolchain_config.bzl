@@ -340,7 +340,7 @@ def _impl(ctx):
     cxx_builtin_include_directories = [
         "${CONDA_BUILD_SYSROOT}/System/Library/Frameworks",
         "${CONDA_BUILD_SYSROOT}/usr/include",
-        "${BUILD_PREFIX}/lib/clang/10.0.0/include",
+        "${BUILD_PREFIX}/lib/clang/12.0.0/include",
         "${BUILD_PREFIX}/include/c++/v1",
     ]
 
