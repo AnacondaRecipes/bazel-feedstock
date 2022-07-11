@@ -203,7 +203,7 @@ def _impl(ctx):
                             "-isystem",
                             "${BUILD_PREFIX}/include/c++/v1",
                             "-isystem",
-                            "${BUILD_PREFIX}/lib/clang/10.0.0/include",
+                            "${BUILD_PREFIX}/lib/clang/12.0.0/include",
                             "-isystem",
                             "${CONDA_BUILD_SYSROOT}/usr/include",
                             "-isystem",
