@@ -21,6 +21,10 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     # CROSSTOOL file contains flags for statically linking libc++
     cp -r ${RECIPE_DIR}/custom_clang_toolchain .
     cd custom_clang_toolchain
+
+    # No clue why, but is searched for in the custom toolchain directory.
+    ln -sf "${BUILD_PREFIX}/bin/${HOST}-libtool" "${HOST}-libtool"
+
     sed -e "s:\${CLANG}:${CLANG}:" \
         -e "s:\${INSTALL_NAME_TOOL}:${INSTALL_NAME_TOOL}:" \
         -e "s:\${CONDA_BUILD_SYSROOT}:${CONDA_BUILD_SYSROOT}:" \
