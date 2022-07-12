@@ -21,7 +21,6 @@ build:
   number: 0
   ignore_prefix_files: True
   binary_relocation: False  # [osx]
-  skip: True  # [not (linux64 or aarch64 or win64 or osx)]
   ignore_run_exports:
     - libcxx # [not osx]
   missing_dso_whitelist:
