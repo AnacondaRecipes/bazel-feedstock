@@ -107,9 +107,6 @@ def _impl(ctx):
                 flag_groups = [
                     flag_group(
                         flags = [
-                            "-march=core2",
-                            "-mtune=haswell",
-                            "-mssse3",
                             "-ftree-vectorize",
                             "-fPIC",
                             "-fPIE",
@@ -135,10 +132,6 @@ def _impl(ctx):
                 flag_groups = [
                     flag_group(
                         flags = [
-                            "-march",
-                            "core2",
-                            "-mtune=haswell",
-                            "-mssse3",
                             "-stdlib=libc++",
                             "-std=gnu++11",
                             "-DOS_MACOSX",
