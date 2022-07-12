@@ -11,7 +11,7 @@ source:
     - patches/0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
     - patches/0002-do-not-use-enable-gold-unless-supported.patch  # [unix]
     - patches/0003-Use-LSFindApplicationForInfo-for-locating-xcode.patch  # [osx]
-    - patches/0004-osx_os_log.patch  # [osx]
+    - patches/0004-link-against-iokit.patch  # [osx]
     - patches/0005-fix_netrc_protocol.patch  # [osx]
     - patches/0006-missing_inttype_h.patch
     - patches/0007-patch2.patch
