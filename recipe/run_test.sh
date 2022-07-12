@@ -7,7 +7,11 @@ cp -r ${RECIPE_DIR}/tutorial .
 cd tutorial
 declare -a BAZEL_BUILD_OPTS
 if [[ ${HOST} =~ .*darwin.* ]]; then
-    export CONDA_BUILD_SYSROOT='/opt/MacOSX10.10.sdk'
+    if [[ ${HOST} =~ .*arm64.* ]]; then
+        export CONDA_BUILD_SYSROOT='/Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk'
+    else
+        export CONDA_BUILD_SYSROOT='/opt/MacOSX10.10.sdk'
+    fi
     cp -r ${RECIPE_DIR}/custom_clang_toolchain .
     cd custom_clang_toolchain
     sed -e "s:\${CLANG}:${CLANG}:" \
