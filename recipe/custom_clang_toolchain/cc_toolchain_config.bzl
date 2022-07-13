@@ -107,9 +107,6 @@ def _impl(ctx):
                 flag_groups = [
                     flag_group(
                         flags = [
-                            "-march=core2",
-                            "-mtune=haswell",
-                            "-mssse3",
                             "-ftree-vectorize",
                             "-fPIC",
                             "-fPIE",
@@ -135,10 +132,6 @@ def _impl(ctx):
                 flag_groups = [
                     flag_group(
                         flags = [
-                            "-march",
-                            "core2",
-                            "-mtune=haswell",
-                            "-mssse3",
                             "-stdlib=libc++",
                             "-std=gnu++11",
                             "-DOS_MACOSX",
@@ -203,7 +196,7 @@ def _impl(ctx):
                             "-isystem",
                             "${BUILD_PREFIX}/include/c++/v1",
                             "-isystem",
-                            "${BUILD_PREFIX}/lib/clang/10.0.0/include",
+                            "${BUILD_PREFIX}/lib/clang/12.0.0/include",
                             "-isystem",
                             "${CONDA_BUILD_SYSROOT}/usr/include",
                             "-isystem",
@@ -340,7 +333,7 @@ def _impl(ctx):
     cxx_builtin_include_directories = [
         "${CONDA_BUILD_SYSROOT}/System/Library/Frameworks",
         "${CONDA_BUILD_SYSROOT}/usr/include",
-        "${BUILD_PREFIX}/lib/clang/10.0.0/include",
+        "${BUILD_PREFIX}/lib/clang/12.0.0/include",
         "${BUILD_PREFIX}/include/c++/v1",
     ]
 

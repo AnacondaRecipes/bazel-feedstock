@@ -1,0 +1,23 @@
+diff -urN a/src/main/tools/linux-sandbox-pid1.cc b/src/main/tools/linux-sandbox-pid1.cc
+--- a/src/main/tools/linux-sandbox-pid1.cc	1980-01-01 00:00:00.000000000 +0300
++++ b/src/main/tools/linux-sandbox-pid1.cc	2022-07-11 15:57:33.138591108 +0300
+@@ -40,6 +40,7 @@
+ #include <sys/types.h>
+ #include <sys/wait.h>
+ #include <unistd.h>
++#include <inttypes.h>
+ 
+ #include <string>
+ 
+diff -urN a/src/main/tools/logging.h b/src/main/tools/logging.h
+--- a/src/main/tools/logging.h	2022-07-11 15:56:44.558799549 +0300
++++ b/src/main/tools/logging.h	2022-07-11 15:57:33.138591108 +0300
+@@ -46,7 +46,7 @@
+       struct timespec ts;                                           \
+       clock_gettime(CLOCK_REALTIME, &ts);                           \
+                                                                     \
+-      fprintf(stderr, "%" PRId64 ".%09ld: %s:%d: " fmt "\n",        \
++      fprintf(stderr, "%ld.%09ld: %s:%d: " fmt "\n",        \
+               ((int64_t)ts.tv_sec), ts.tv_nsec, __FILE__, __LINE__, \
+               ##__VA_ARGS__);                                       \
+     }                                                               \

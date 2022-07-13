@@ -2,6 +2,10 @@
 
 set -v -x
 
+if [[ "$target_platform" =~ linux.* ]] && [ ! -f "${BUILD_PREFIX}/bin/readelf" ]; then
+    ln -s "${HOST}-readelf" "${BUILD_PREFIX}/bin/readelf"
+fi
+
 # useful for debugging:
 export BAZEL_BUILD_OPTS="--logging=6 --subcommands --verbose_failures"
 
@@ -17,6 +21,10 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     # CROSSTOOL file contains flags for statically linking libc++
     cp -r ${RECIPE_DIR}/custom_clang_toolchain .
     cd custom_clang_toolchain
+
+    # No clue why, but is searched for in the custom toolchain directory.
+    ln -sf "${BUILD_PREFIX}/bin/${HOST}-libtool" "${HOST}-libtool"
+
     sed -e "s:\${CLANG}:${CLANG}:" \
         -e "s:\${INSTALL_NAME_TOOL}:${INSTALL_NAME_TOOL}:" \
         -e "s:\${CONDA_BUILD_SYSROOT}:${CONDA_BUILD_SYSROOT}:" \
@@ -70,7 +78,11 @@ else
     cat > wrapper.sh << EOF
 #!/bin/bash
 if [[ "\$@" == *"params"* ]] || [[ "\$@" == *"c++"* ]] ; then
-    ${GXX} "\$@"
+    # At least one external project (abseil) is missing an explicit include
+    # <limits>. Since it seems impossible to patch abseil while it is being
+    # pulled in (indirectly) through Bazel's own dependency management at
+    # build time, we make the compiler include it per default.
+    ${GXX} -include limits "\$@"
 else
     ${GCC} "\$@"
 fi
@@ -79,6 +91,9 @@ EOF
     cp wrapper.sh ${BUILD_PREFIX}/bin/
     export CC=${BUILD_PREFIX}/bin/wrapper.sh
 fi
+
+# Avoid using ~/.bazel/...
+export BAZEL_WRKDIR="${BUILD_PREFIX}/../.bazel"
 
 ./compile.sh
 mv output/bazel $PREFIX/bin
