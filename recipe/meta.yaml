@@ -18,7 +18,7 @@ source:
     - patches/0008-include-limits.patch
 
 build:
-  number: 0
+  number: 1
   # Missing OpenJDK >= 8 on s390x and ppc64le.
   skip: True  # [s390x or ppc64le]
   ignore_prefix_files: True
