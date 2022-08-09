@@ -1,4 +1,4 @@
-{% set version = "4.2.2" %}
+{% set version = "5.2.0" %}
 
 package:
   name: bazel
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/bazelbuild/bazel/releases/download/{{ version }}/bazel-{{ version }}-dist.zip
-  sha256: 9981d0d53a356c4e87962847750a97c9e8054e460854748006c80f0d7e2b2d33
+  sha256: 820a94dbb14071ed6d8c266cf0c080ecb265a5eea65307579489c4662c2d582a
   patches:
     - patches/0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
     - patches/0002-do-not-use-enable-gold-unless-supported.patch  # [unix]
@@ -15,7 +15,6 @@ source:
     - patches/0005-fix_netrc_protocol.patch  # [osx]
     - patches/0006-missing_inttype_h.patch
     - patches/0007-patch2.patch
-    - patches/0008-include-limits.patch
 
 build:
   number: 1
