@@ -16,7 +16,7 @@ source:
     - patches/0007-patch2.patch
 
 build:
-  number: 1
+  number: 0
   # Missing OpenJDK >= 8 on s390x and ppc64le.
   skip: True  # [s390x or ppc64le]
   ignore_prefix_files: True
@@ -54,7 +54,7 @@ test:
     # unzip -p bin/bazel embedded_tools/tools/cpp/unix_cc_configure.bzl | grep stdc++
 
 about:
-  home: https://www.bazel.io/
+  home: https://bazel.build/
   license: Apache-2.0
   license_family: Apache
   license_file: LICENSE
@@ -65,7 +65,7 @@ about:
     client applications for both Android and iOS platforms. It also provides an
     extensible framework that you can use to develop your own build rules.
   dev_url: https://github.com/bazelbuild/bazel
-  doc_url: https://www.bazel.io/versions/master/docs/install.html
+  doc_url: https://bazel.build/docs
 
 extra:
   recipe-maintainers:
