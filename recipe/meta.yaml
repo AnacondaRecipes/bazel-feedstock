@@ -1,4 +1,4 @@
-{% set version = "5.2.0" %}
+{% set version = "5.3.1" %}
 
 package:
   name: bazel
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/bazelbuild/bazel/releases/download/{{ version }}/bazel-{{ version }}-dist.zip
-  sha256: 820a94dbb14071ed6d8c266cf0c080ecb265a5eea65307579489c4662c2d582a
+  sha256: 18486e7152ca26b26585e9b2a6f49f332b116310d3b7e5b70583f1f1f24bb8ae
   patches:
     - patches/0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
     - patches/0002-do-not-use-enable-gold-unless-supported.patch  # [unix]
@@ -70,5 +70,9 @@ about:
 
 extra:
   recipe-maintainers:
-    - jjhelmus
+    - h-vetinari
     - nehaljwani
+    - abhi18av
+    - jschueller
+    - adrianchia
+    - xhochy
