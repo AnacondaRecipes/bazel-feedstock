@@ -14,6 +14,7 @@ source:
     - patches/0005-fix_netrc_protocol.patch  # [osx]
     - patches/0006-missing_inttype_h.patch
     - patches/0007-patch2.patch
+    - patches/0009-win-Disable-VS-activation-and-make-build-verbose.patch
 
 build:
   number: 0
@@ -34,14 +35,15 @@ requirements:
     - patch  # [unix]
     - python >=3
   host:
-    - openjdk >=8
+    - openjdk >=8,<17
     - posix  # [win]
     - unzip  # [linux]
     - zip    # [linux]
   run:
-    - openjdk >=8
+    - openjdk >=8,<17
     - posix  # [win]
-
+    - ijar {{ version }}       # [build_platform != target_platform]
+    - singlejar {{ version }}  # [build_platform != target_platform]
 test:
   requires:
     - {{ compiler('c') }}
