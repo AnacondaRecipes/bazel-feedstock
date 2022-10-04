@@ -39,6 +39,8 @@ requirements:
     - posix  # [win]
     - unzip  # [linux]
     - zip    # [linux]
+    - wheel
+    - setuptools
   run:
     - openjdk >=8,<17
     - posix  # [win]
