@@ -1,0 +1,34 @@
+diff --git a/src/main/java/com/google/devtools/build/lib/actions/ActionInputHelper.java b/src/main/java/com/google/devtools/build/lib/actions/ActionInputHelper.java
+index bc3d15c7b7..45a5949c80 100644
+--- a/src/main/java/com/google/devtools/build/lib/actions/ActionInputHelper.java
++++ b/src/main/java/com/google/devtools/build/lib/actions/ActionInputHelper.java
+@@ -143,4 +143,16 @@ public final class ActionInputHelper {
+         ? ((Artifact) input).getPath()
+         : execRoot.getRelative(input.getExecPath());
+   }
++
++  /**
++   * Returns the {@link Path} for an {@link ActionInput}.
++   */
++  public static Path toPath(ActionInput input, Path execRoot) {
++    Preconditions.checkNotNull(input, "input");
++    Preconditions.checkNotNull(execRoot, "execRoot");
++
++    return (input instanceof Artifact)
++        ? ((Artifact) input).getPath()
++        : execRoot.getRelative(input.getExecPath());
++  }
+ }
+diff --git a/src/main/java/com/google/devtools/build/lib/exec/SingleBuildFileCache.java b/src/main/java/com/google/devtools/build/lib/exec/SingleBuildFileCache.java
+index e7542a1ad9..11d9c08779 100644
+--- a/src/main/java/com/google/devtools/build/lib/exec/SingleBuildFileCache.java
++++ b/src/main/java/com/google/devtools/build/lib/exec/SingleBuildFileCache.java
+@@ -60,7 +60,7 @@ public class SingleBuildFileCache implements MetadataProvider {
+         .get(
+             input.getExecPathString(),
+             execPath -> {
+-              Path path = ActionInputHelper.toInputPath(input, execRoot);
++              Path path = ActionInputHelper.toPath(input, execRoot);
+               FileArtifactValue metadata;
+               try {
+                 metadata =

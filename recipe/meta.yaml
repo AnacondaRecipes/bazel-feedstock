@@ -12,15 +12,16 @@ source:
     - patches/0002-do-not-use-enable-gold-unless-supported.patch  # [unix]
     - patches/0004-link-against-iokit.patch  # [osx]
     - patches/0005-fix_netrc_protocol.patch  # [osx]
-    - patches/0006-missing_inttype_h.patch
+    # - patches/0006-missing_inttype_h.patch
     - patches/0007-patch2.patch
-    - patches/0009-win-Disable-VS-activation-and-make-build-verbose.patch
-
+    # - patches/0009-win-Disable-VS-activation-and-make-build-verbose.patch
+    - patches/0010-directory-not-empty.patch
+    
 build:
   number: 0
   # trigger: 1
   # Missing OpenJDK >= 8 on s390x and ppc64le.
-  skip: True  # [s390x or ppc64le]
+  skip: True  # [s390x or ppc64le or py<37]
   ignore_prefix_files: True
   binary_relocation: False  # [osx]
   ignore_run_exports:
@@ -33,7 +34,8 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - patch  # [unix]
-    - python >=3
+    - m2-patch  # [win]
+    - python
   host:
     - openjdk >=8,<17
     - posix  # [win]
