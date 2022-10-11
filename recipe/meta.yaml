@@ -16,7 +16,7 @@ source:
     - patches/0007-patch2.patch
     # - patches/0009-win-Disable-VS-activation-and-make-build-verbose.patch
     - patches/0010-directory-not-empty.patch
-    
+
 build:
   number: 0
   # trigger: 1
@@ -81,4 +81,4 @@ extra:
     - abhi18av
     - jschueller
     - adrianchia
-    - xhochy
+    - xhochy 
