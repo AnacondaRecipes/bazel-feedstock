@@ -27,7 +27,7 @@ set MSYS2_PATH_TYPE=inherit
 set CHERE_INVOKING=1
 set "BAZEL_VC=%VSINSTALLDIR%VC"
 set "BAZEL_VS=%VSINSTALLDIR%"
-bash -lc "%SRC_DIR%"/compile.sh
+bash -lx ./compile.sh
 if errorlevel 1 exit 1
 
 copy %saved_source_dir%\output\bazel.exe %LIBRARY_BIN%\
