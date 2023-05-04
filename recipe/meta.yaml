@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/bazelbuild/bazel/releases/download/{{ version }}/bazel-{{ version }}-dist.zip
-  sha256: 820a94dbb14071ed6d8c266cf0c080ecb265a5eea65307579489c4662c2d582a
+  sha256: dcff6935756aa7aca4fc569bb2bd26e1537f0b1f6d1bda5f2b200fa835cc507f
   patches:
     - patches/0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
     - patches/0002-do-not-use-enable-gold-unless-supported.patch  # [unix]
