@@ -196,7 +196,7 @@ def _impl(ctx):
                             "-isystem",
                             "${BUILD_PREFIX}/include/c++/v1",
                             "-isystem",
-                            "${BUILD_PREFIX}/lib/clang/12.0.0/include",
+                            "${BUILD_PREFIX}/lib/clang/14.0.6/include",
                             "-isystem",
                             "${CONDA_BUILD_SYSROOT}/usr/include",
                             "-isystem",
@@ -333,7 +333,7 @@ def _impl(ctx):
     cxx_builtin_include_directories = [
         "${CONDA_BUILD_SYSROOT}/System/Library/Frameworks",
         "${CONDA_BUILD_SYSROOT}/usr/include",
-        "${BUILD_PREFIX}/lib/clang/12.0.0/include",
+        "${BUILD_PREFIX}/lib/clang/14.0.6/include",
         "${BUILD_PREFIX}/include/c++/v1",
     ]
 
