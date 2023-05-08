@@ -32,7 +32,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - patch  # [unix]
-    - python >=3
+    - python
   host:
     - openjdk >=8
     - posix  # [win]
