@@ -1,4 +1,4 @@
-{% set version = "5.2.0" %}
+{% set version = "5.4.1" %}
 
 package:
   name: bazel
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/bazelbuild/bazel/releases/download/{{ version }}/bazel-{{ version }}-dist.zip
-  sha256: 820a94dbb14071ed6d8c266cf0c080ecb265a5eea65307579489c4662c2d582a
+  sha256: dcff6935756aa7aca4fc569bb2bd26e1537f0b1f6d1bda5f2b200fa835cc507f
   patches:
     - patches/0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
     - patches/0002-do-not-use-enable-gold-unless-supported.patch  # [unix]
@@ -17,7 +17,6 @@ source:
 
 build:
   number: 0
-  # trigger: 1
   # Missing OpenJDK >= 8 on s390x and ppc64le.
   skip: True  # [s390x or ppc64le]
   ignore_prefix_files: True
@@ -32,7 +31,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - patch  # [unix]
-    - python >=3
+    - python
   host:
     - openjdk >=8
     - posix  # [win]
@@ -46,13 +45,6 @@ test:
   requires:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-  commands:
-    - bazel -h
-    - readelf -d $PREFIX/bin/bazel  # [linux]
-    - conda inspect linkages -p $PREFIX bazel # [unix]
-    # manually check that -lstdc++ appears in the bundled unix_cc_configure.bzl
-    # tar xf /path/to/pkgs/bazel-0.5.4-hf484d3e_0.tar.bz2 bin/bazel
-    # unzip -p bin/bazel embedded_tools/tools/cpp/unix_cc_configure.bzl | grep stdc++
 
 about:
   home: https://bazel.build/

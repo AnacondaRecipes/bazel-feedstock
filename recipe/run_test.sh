@@ -3,6 +3,8 @@
 # https://docs.bazel.build/versions/master/tutorial/cpp.html
 set -x
 
+bazel -h
+
 cp -r ${RECIPE_DIR}/tutorial .
 cd tutorial
 declare -a BAZEL_BUILD_OPTS
