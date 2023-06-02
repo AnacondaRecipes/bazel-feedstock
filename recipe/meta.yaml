@@ -1,4 +1,4 @@
-{% set version = "5.4.1" %}
+{% set version = "6.2.0" %}
 
 package:
   name: bazel
@@ -6,14 +6,10 @@ package:
 
 source:
   url: https://github.com/bazelbuild/bazel/releases/download/{{ version }}/bazel-{{ version }}-dist.zip
-  sha256: dcff6935756aa7aca4fc569bb2bd26e1537f0b1f6d1bda5f2b200fa835cc507f
+  sha256: f1e8f788637ac574d471d619d2096baaca04a19b57a034399e079633db441945
   patches:
     - patches/0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
-    - patches/0002-do-not-use-enable-gold-unless-supported.patch  # [unix]
-    - patches/0004-link-against-iokit.patch  # [osx]
-    - patches/0005-fix_netrc_protocol.patch  # [osx]
-    - patches/0006-missing_inttype_h.patch
-    - patches/0007-patch2.patch
+    - patches/0004-link-against-iokit.patch                      # [osx]
 
 build:
   number: 0
@@ -33,7 +29,7 @@ requirements:
     - patch  # [unix]
     - python
   host:
-    - openjdk >=8
+    - openjdk 11
     - posix  # [win]
     - unzip  # [linux]
     - zip    # [linux]
