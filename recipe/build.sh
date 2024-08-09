@@ -39,7 +39,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     sed -i "" "s:\${LIBTOOL}:${LIBTOOL}:" cc_toolchain_config.bzl
     cd ..
     export BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
-    export BAZEL_BUILD_OPTS="--verbose_failures --crosstool_top=//custom_clang_toolchain:toolchain"
+    export BAZEL_BUILD_OPTS="--verbose_failures --crosstool_top=//custom_clang_toolchain:toolchain --cxxopt=-std=c++17"
 else
     # The bazel binary is a self extracting zip file which contains binaries
     # and libraries, some of which are linked to libstdc++. At runtime a
