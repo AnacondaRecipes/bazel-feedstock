@@ -30,6 +30,7 @@ requirements:
     - python
   host:
     - openjdk 21
+    - libabseil        # [unix]
     - posix  # [win]
     - unzip  # [linux]
     - zip    # [linux]
