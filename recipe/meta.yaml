@@ -9,7 +9,8 @@ source:
   sha256: 83386618bc489f4da36266ef2620ec64a526c686cf07041332caff7c953afaf5
   patches:
     - patches/0001-allow-args-to-be-passed-to-bazel_build.patch          # [unix]
-    - patches/0006-missing_inttype_h.patch                               # [unix]
+    - patches/0002-missing_inttype_h.patch                               # [unix]
+    - patches/0003-Add-missing-absl-dependency.patch                     # [linux]
 
 build:
   number: 0
