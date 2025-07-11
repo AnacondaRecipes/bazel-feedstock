@@ -1,4 +1,4 @@
-{% set version = "6.5.0" %}
+{% set version = "7.4.1" %}
 
 package:
   name: bazel
@@ -6,15 +6,13 @@ package:
 
 source:
   url: https://github.com/bazelbuild/bazel/releases/download/{{ version }}/bazel-{{ version }}-dist.zip
-  sha256: fc89da919415289f29e4ff18a5e01270ece9a6fe83cb60967218bac4a3bb3ed2
+  sha256: 83386618bc489f4da36266ef2620ec64a526c686cf07041332caff7c953afaf5
   patches:
-    - patches/0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
-    - patches/0004-link-against-iokit.patch                      # [osx]
+    - patches/0001-allow-args-to-be-passed-to-bazel_build.patch          # [unix]
+    - patches/0006-missing_inttype_h.patch                               # [unix]
 
 build:
-  number: 1
-  # Missing OpenJDK >= 8 on s390x and ppc64le.
-  skip: True  # [s390x or ppc64le]
+  number: 0
   ignore_prefix_files: True
   binary_relocation: False  # [osx]
   ignore_run_exports:
@@ -29,18 +27,20 @@ requirements:
     - patch  # [unix]
     - python
   host:
-    - openjdk 11
+    - openjdk 21
     - posix  # [win]
     - unzip  # [linux]
     - zip    # [linux]
   run:
-    - openjdk >=8
+    - openjdk >=21
     - posix  # [win]
 
 test:
   requires:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - bazel-toolchain
+  # Test commands are in run_test.sh and run_test.bat
 
 about:
   home: https://bazel.build/
@@ -60,3 +60,4 @@ extra:
   recipe-maintainers:
     - jjhelmus
     - nehaljwani
+    - xhochy
