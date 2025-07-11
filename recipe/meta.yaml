@@ -25,7 +25,7 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - bazel-toolchain
+    - bazel-toolchain  # [unix]
     - patch  # [unix]
     - python
   host:
@@ -41,7 +41,7 @@ test:
   requires:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - bazel-toolchain
+    - bazel-toolchain  # [unix]
   # Test commands are in run_test.sh and run_test.bat
 
 about:
