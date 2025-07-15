@@ -14,8 +14,8 @@ source:
 
 build:
   number: 0
-  # ignore_prefix_files: True
-  # binary_relocation: False  # [unix]
+  ignore_prefix_files: True
+  binary_relocation: False  # [osx]
   ignore_run_exports:
     - libcxx # [not osx]
   missing_dso_whitelist:
