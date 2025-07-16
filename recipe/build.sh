@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd $SRC_DIR
+
 set -euxo pipefail
 
 if [[ "${target_platform}" == osx-* ]]; then
