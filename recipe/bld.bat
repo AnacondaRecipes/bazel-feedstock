@@ -4,6 +4,8 @@
 set "saved_recipe_dir=%RECIPE_DIR%"
 set "saved_source_dir=%SRC_DIR%"
 
+set JAVA_HOME=%LIBRARY_PREFIX%
+
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%PYTHON%"') DO set "BAZEL_PYTHON=%%i"
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%LIBRARY_PREFIX%\usr\bin\bash.exe"') DO set "BAZEL_SH=%%i"
 
