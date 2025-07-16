@@ -11,6 +11,7 @@ source:
     - patches/0001-allow-args-to-be-passed-to-bazel_build.patch          # [unix]
     - patches/0002-missing_inttype_h.patch                               # [unix]
     - patches/0003-Add-missing-absl-dependency.patch                     # [linux]
+    - patches/0004-fix-osx-missing-binary.patch                          # [osx]
 
 build:
   number: 0
