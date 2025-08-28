@@ -1,46 +1,83 @@
-{% set version = "6.5.0" %}
+{% set version = "7.6.1" %}
+{% set base_url = "https://github.com/bazelbuild/bazel/releases/download" %}
 
 package:
   name: bazel
   version: {{ version }}
 
 source:
-  url: https://github.com/bazelbuild/bazel/releases/download/{{ version }}/bazel-{{ version }}-dist.zip
-  sha256: fc89da919415289f29e4ff18a5e01270ece9a6fe83cb60967218bac4a3bb3ed2
-  patches:
-    - patches/0001-allow-args-to-be-passed-to-bazel_build.patch  # [unix]
-    - patches/0004-link-against-iokit.patch                      # [osx]
+  - url: {{ base_url }}/{{ version }}/bazel-{{ version }}-dist.zip
+    sha256: c1106db93eb8a719a6e2e1e9327f41b003b6d7f7e9d04f206057990775a7760e
+    patches:
+      ## bazel depends on https://github.com/conda-forge/singlejar-feedstock to build,
+      ## which patches the same sources; the patches from singlejar should either be
+      ## taken over here, or synced back if change is necessary
+      - patches/0001-allow-args-to-be-passed-to-bazel_build.patch
+      - patches/0002-Build-with-native-dependencies.patch         # [unix]
+      - patches/0003-use-C-17.patch
+      - patches/0004-Use-conda-packages-for-build-tools.patch     # [unix]
+      - patches/0005-grpc-java-plugin-from-build.patch            # [unix]
+      - patches/0006-bazel-bin-loader-path.patch                  # [osx]
+      - patches/0007-Adjust-cross-bazel-resultpath.patch
+      - patches/0008-win-Disable-VS-activation-and-make-build-verbose.patch
+      - patches/0009-Install-protobuf-via-maven.patch             # [unix]
+      - patches/0010-Adopt-system-libprotobuf.patch               # [unix]
+      - patches/0011-Enable-new-protobuf-major-release.patch      # [unix]
+      # backport https://github.com/bazelbuild/bazel/commit/aa480481726efb5def0c1ce2a3e07584bf11b507
+      - patches/0012-Disable-absl-debug-logging-when-client_debug-false-t.patch
+      # backport https://github.com/bazelbuild/bazel/commit/b817aeef1a55f8e470f91e11f7df58d4e655bbba
+      - patches/0013-Removing-redundant-function-null_grpc_log_function.patch
+      - patches/0014-Add-missing-absl-dependency.patch
 
 build:
-  number: 1
-  # Missing OpenJDK >= 8 on s390x and ppc64le.
-  skip: True  # [s390x or ppc64le]
-  ignore_prefix_files: True
-  binary_relocation: False  # [osx]
-  ignore_run_exports:
-    - libcxx # [not osx]
-  missing_dso_whitelist:
-    - "*/libc++.1.dylib" # [osx]
+  number: 0
+  # TODO: Have to manually release on Windows while SIR-2384 is being worked on.
+  skip: True  # [win]
+  ignore_prefix_files: true
+  binary_relocation: false
+  script_env:
+    # The release timestamp of this version.
+    - SOURCE_DATE_EPOCH="1743443520"  # 3/31/2025 1:52 PM EDT
 
 requirements:
   build:
+    - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - patch  # [unix]
-    - python
+    - sed                      # [unix]
+    - openjdk 21.*             # [unix]
+    # we need $BUILD_PREFIX/bin/{grpc_cpp_plugin,grpc_java_plugin,protoc}
+    # bazel vendors & expects quite an old grpc-java-plugin; avoid pulling in versions with
+    # https://github.com/grpc/grpc-java/commit/ea8c31c305eac5a6ac9a09de5ea2edb9ed719a31
+    - grpc_java_plugin <1.70   # [unix]
+    - libgrpc                  # [unix]
+    - libprotobuf              # [unix]
+    - ijar {{ version }}       # [unix]
+    - singlejar {{ version }}  # [unix]
+    - bazel-toolchain >=0.2.0  # [unix]
+    - zip                      # [linux]
+    - unzip                    # [linux]
+    - python *                 # [win]
   host:
-    - openjdk 11
-    - posix  # [win]
-    - unzip  # [linux]
-    - zip    # [linux]
+    - libabseil  {{ libabseil }}      # [unix]
+    - libgrpc  {{ libgrpc }}          # [unix]
+    - libprotobuf  {{ libprotobuf }}  # [unix]
+    - openjdk 21.*                    # [win]
+    - msys2-posix 1                   # [win]
   run:
-    - openjdk >=8
-    - posix  # [win]
+    - openjdk >=21
+    - msys2-posix              # [win]
+    - ijar {{ version }}       # [unix]
+    - singlejar {{ version }}  # [unix]
 
 test:
   requires:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - bazel-toolchain >=0.2  # [unix]
+  commands:
+    - bazel -h
+    - bazel version
 
 about:
   home: https://bazel.build/
@@ -57,6 +94,13 @@ about:
   doc_url: https://bazel.build/docs
 
 extra:
+  skip-lints:
+    - msys2_must_be_in_build  # The build tool posix is not in the build section.
+    - has_run_test_and_commands
   recipe-maintainers:
-    - jjhelmus
+    - h-vetinari
     - nehaljwani
+    - abhi18av
+    - jschueller
+    - adrianchia
+    - xhochy
