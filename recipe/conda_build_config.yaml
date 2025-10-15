@@ -1,0 +1,18 @@
+c_stdlib_version:  # [win]
+  - 2022.12        # [win]
+
+c_compiler:    # [win]
+  - vs2022     # [win]
+cxx_compiler:  # [win]
+  - vs2022     # [win]
+c_compiler_version:    # [osx]
+  - 19                 # [osx]
+cxx_compiler_version:  # [osx]
+  - 19                 # [osx]
+
+# Need at least libgrpc 1.72.0 to build bazel 8+
+libgrpc:
+  - 1.74.1
+# Need at least abseil 20250127.1 to build bazel 8+
+libabseil:
+  - 20250127.1
