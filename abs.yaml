@@ -3,3 +3,9 @@
 # This should be removed once https://anaconda.atlassian.net/browse/PKG-5977 is unblocked.
 content_signing:
     win-64: False
+
+aggregate_check: false
+
+build_parameters:
+  - "--suppress-variables"
+  - "--skip-existing"
