@@ -15,4 +15,6 @@ libgrpc:
   - 1.74.1
 # Need at least abseil 20250127.1 to build bazel 8+
 libabseil:
-  - 20250127.1
+  - 20250814.1
+libprotobuf:
+  - 6.33.0
