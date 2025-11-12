@@ -43,7 +43,8 @@ requirements:
     - sed                             # [unix]
     - openjdk 21.*                    # [unix]
     # we need $BUILD_PREFIX/bin/{grpc_cpp_plugin,grpc_java_plugin,protoc}
-    - grpc_java_plugin {{ libgrpc }}  # [unix]
+    # lock to the same major.minor version as libgrpc
+    - grpc_java_plugin {{ ".".join(libgrpc.split(".")[:2]) }}  # [unix]
     - libgrpc {{ libgrpc }}           # [unix]
     - libprotobuf {{ libprotobuf }}   # [unix]
     - ijar {{ version }}              # [unix]
