@@ -1,0 +1,21 @@
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -48,6 +48,18 @@ local_path_override(
+     path = "./third_party/systemlibs/protobuf",
+ )
+ 
++# Force all modules to use newer versions of bazel_skylib and rules_cc
++# This ensures transitive dependencies (like grpc) use compatible versions
++single_version_override(
++    module_name = "bazel_skylib",
++    version = "1.7.1",
++)
++
++single_version_override(
++    module_name = "rules_cc",
++    version = "0.1.1",
++)
++
+ # TODO: wyv@ - add remoteapis to the BCR
+ bazel_dep(name = "remoteapis", version = "")
+ 
