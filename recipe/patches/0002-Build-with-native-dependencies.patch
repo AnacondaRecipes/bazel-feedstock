@@ -728,6 +728,18 @@ index 0000000..8b3a16e
 +    current = apple_common.dotted_version(native.bazel_version)
 +    if current.compare_to(expected) < 0:
 +        fail("Bazel must be newer than 0.5.4")
+diff --git a/third_party/systemlibs/protobuf/src/google/protobuf/compiler/BUILD b/third_party/systemlibs/protobuf/src/google/protobuf/compiler/BUILD
+new file mode 100644
+index 0000000..8f5c8f5
+--- /dev/null
++++ b/third_party/systemlibs/protobuf/src/google/protobuf/compiler/BUILD
+@@ -0,0 +1,6 @@
++# Minimal BUILD file to satisfy proto_library implicit dependencies
++alias(
++    name = "protoc_minimal",
++    actual = "@com_google_protobuf//:protoc",
++    visibility = ["//visibility:public"],
++)
 diff --git a/third_party/systemlibs/protobuf_deps.bzl b/third_party/systemlibs/protobuf_deps.bzl
 new file mode 100644
 index 0000000..aafd89b

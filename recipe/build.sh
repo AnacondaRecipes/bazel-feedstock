@@ -17,16 +17,6 @@ if [[ "${target_platform}" == "osx-64" ]]; then
   export TARGET_CPU="darwin"
 fi
 
-mkdir -p third_party/systemlibs/protobuf/src/google/protobuf/compiler
-cat > third_party/systemlibs/protobuf/src/google/protobuf/compiler/BUILD << 'EOF'
-# Minimal BUILD file to satisfy proto_library implicit dependencies
-
-alias(
-    name = "protoc_minimal",
-    actual = "@com_google_protobuf//:protoc",
-    visibility = ["//visibility:public"],
-)
-EOF
 
 # For debugging purposes, you can add
 # --logging=6 --subcommands --verbose_failures
