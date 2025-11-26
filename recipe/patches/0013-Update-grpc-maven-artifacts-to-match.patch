@@ -1,0 +1,43 @@
+From 7f66cdbcd01e61a8b67386257c4ac13871a42ceb Mon Sep 17 00:00:00 2001
+From: Eric Lundby <elundby@anaconda.com>
+Date: Tue, 25 Nov 2025 14:48:46 -0700
+Subject: [PATCH] Update gRPC Maven artifacts to 1.74.0
+
+Update Maven grpc artifacts to match grpc-java module version 1.74.0
+to ensure Java API compatibility (blockingV2UnaryCall method).
+---
+ MODULE.bazel | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/MODULE.bazel b/MODULE.bazel
+index cdafe19c68..e5a593fd24 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -158,15 +158,15 @@ maven.install(
+         "commons-collections:commons-collections:3.2.2",
+         "commons-lang:commons-lang:2.6",
+         "io.github.java-diff-utils:java-diff-utils:4.12",
+-        "io.grpc:grpc-api:1.66.0",
+-        "io.grpc:grpc-auth:1.66.0",
+-        "io.grpc:grpc-context:1.66.0",
+-        "io.grpc:grpc-core:1.66.0",
+-        "io.grpc:grpc-inprocess:1.66.0",
+-        "io.grpc:grpc-netty:1.66.0",
+-        "io.grpc:grpc-protobuf:1.66.0",
+-        "io.grpc:grpc-protobuf-lite:1.66.0",
+-        "io.grpc:grpc-stub:1.66.0",
++        "io.grpc:grpc-api:1.74.0",
++        "io.grpc:grpc-auth:1.74.0",
++        "io.grpc:grpc-context:1.74.0",
++        "io.grpc:grpc-core:1.74.0",
++        "io.grpc:grpc-inprocess:1.74.0",
++        "io.grpc:grpc-netty:1.74.0",
++        "io.grpc:grpc-protobuf:1.74.0",
++        "io.grpc:grpc-protobuf-lite:1.74.0",
++        "io.grpc:grpc-stub:1.74.0",
+         "io.netty:netty-buffer:4.1.119.Final",
+         "io.netty:netty-codec:4.1.119.Final",
+         "io.netty:netty-codec-http:4.1.119.Final",
+-- 
+2.50.1 (Apple Git-155)
+

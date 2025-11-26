@@ -9,3 +9,10 @@ aggregate_check: false
 build_parameters:
   - "--suppress-variables"
   - "--skip-existing"
+
+channels:
+  - https://staging.continuum.io/pbp/fs/bazel-feedstock/pr0/aa2b3af
+  - https://staging.continuum.io/pbp/fs/ijar-feedstock/pr2/afd8d72
+  - https://staging.continuum.io/pbp/fs/singlejar-feedstock/pr2/b510032
+  - https://staging.continuum.io/pbp/fs/grpc_java_plugin-feedstock/pr3/ff2af0d
+  - https://staging.continuum.io/pbp/protobuf-6.33.0-build-4

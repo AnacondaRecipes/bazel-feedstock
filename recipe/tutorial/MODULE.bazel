@@ -1,0 +1,4 @@
+module(name = "hello-world-tutorial")
+
+bazel_dep(name = "platforms", version = "1.0.0")
+

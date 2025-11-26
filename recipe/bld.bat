@@ -445,8 +445,5 @@ set xxhash=
 :: to run into "/lib/jvm/bin/java: Argument list too long" again.
 set
 
-set "BAZEL_BUILD_OPTS=--cxxopt=/std:c++17"
-bash -lc "%SRC_DIR%"/compile.sh
+bash -x %RECIPE_DIR%/build_win.sh
 if errorlevel 1 exit 1
-
-copy %saved_source_dir%\output\bazel.exe %LIBRARY_BIN%\
