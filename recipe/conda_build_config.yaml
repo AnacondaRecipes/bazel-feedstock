@@ -5,10 +5,6 @@ c_compiler:    # [win]
   - vs2022     # [win]
 cxx_compiler:  # [win]
   - vs2022     # [win]
-c_compiler_version:    # [osx]
-  - 19                 # [osx]
-cxx_compiler_version:  # [osx]
-  - 19                 # [osx]
 
 # Need at least libgrpc 1.72.0 to build bazel 8+
 libgrpc:
