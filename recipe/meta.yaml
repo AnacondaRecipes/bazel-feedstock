@@ -28,9 +28,10 @@ source:
       # backport https://github.com/bazelbuild/bazel/commit/b817aeef1a55f8e470f91e11f7df58d4e655bbba
       - patches/0013-Removing-redundant-function-null_grpc_log_function.patch
       - patches/0014-Add-missing-absl-dependency.patch
+      - patches/0015-dont-redefine-fdopen.patch
 
 build:
-  number: 0
+  number: 1
   # TODO: Have to manually release on Windows while SIR-2384 is being worked on.
   skip: True  # [win]
   ignore_prefix_files: true
