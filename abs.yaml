@@ -9,3 +9,7 @@ aggregate_check: false
 build_parameters:
   - "--suppress-variables"
   - "--skip-existing"
+
+channels:
+  - https://staging.continuum.io/pbp/fs/singlejar-feedstock/pr3/7062f26
+  - https://staging.continuum.io/pbp/fs/grpc_java_plugin-feedstock/pr5/2bc7bca

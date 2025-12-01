@@ -5,30 +5,31 @@ Subject: [PATCH 14/14] Add missing absl dependency
 
 Co-Authored-By: H. Vetinari <h.vetinari@gmx.com>
 ---
- src/main/cpp/BUILD | 29 +++++++++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+ src/main/cpp/BUILD | 30 +++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/cpp/BUILD b/src/main/cpp/BUILD
 index efedce5da9..1fbb24c7dd 100644
 --- a/src/main/cpp/BUILD
 +++ b/src/main/cpp/BUILD
-@@ -90,6 +90,15 @@ cc_library(
+@@ -90,6 +90,16 @@ cc_library(
      ],
  )
-
+ 
 +# cannot do `[...] + select(...)` in starlark, so factor out common libraries into
 +# a variable; note that this is likely not the full list, because we're inheriting
 +# the linkopts from protobuf (see third_party/systemlibs/protobuf/BUILD), so several
 +# abseil libraries will already be present
 +_CLIENT_LINKOPTS = [
 +    "-labsl_log_severity",
++    "-labsl_strings",
 +    "-labsl_synchronization",
 +]
 +
  cc_binary(
      name = "client",
      srcs = [
-@@ -107,7 +116,7 @@ cc_binary(
+@@ -107,7 +117,7 @@ cc_binary(
          "//conditions:default": ["-Wno-sign-compare"],
      }),
      linkopts = select({
@@ -37,7 +38,7 @@ index efedce5da9..1fbb24c7dd 100644
          ],
          "//src/conditions:freebsd": [
              "-lprocstat",
-@@ -117,7 +126,7 @@ cc_binary(
+@@ -117,7 +127,7 @@ cc_binary(
          ],
          "//src/conditions:windows": [
          ],
@@ -46,7 +47,7 @@ index efedce5da9..1fbb24c7dd 100644
              "-lrt",
              "-ldl",
          ],
-@@ -138,6 +147,22 @@ cc_binary(
+@@ -138,6 +148,22 @@ cc_binary(
          "//src/main/protobuf:command_server_cc_grpc",
          "//src/main/protobuf:command_server_cc_proto",
          "//third_party/ijar:zip",
@@ -68,4 +69,4 @@ index efedce5da9..1fbb24c7dd 100644
 +        "@abseil-cpp//absl/utility:if_constexpr",
      ],
  )
-
+ 
