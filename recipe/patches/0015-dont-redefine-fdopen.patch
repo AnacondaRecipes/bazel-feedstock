@@ -1,0 +1,28 @@
+From b0f5204db5b6b2545ee56211d4a10414bf693288 Mon Sep 17 00:00:00 2001
+From: Eric Lundby <Eric.Lundby@gmail.com>
+Date: Mon, 1 Dec 2025 09:18:51 -0700
+Subject: [PATCH 1/1] 0015-dont-redefine-fdopen
+
+On modern macOS toolchains fdopen is provided by <stdio.h>. Redefining it to NULL breaks the system header prototypes, so do not override it here. Older zlib configs used the macro for platforms without fdopen(), but that does not apply to current macOS.
+---
+ third_party/zlib/zutil.h | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/third_party/zlib/zutil.h b/third_party/zlib/zutil.h
+index 902a304cc2..cc7d7cfdee 100644
+--- a/third_party/zlib/zutil.h
++++ b/third_party/zlib/zutil.h
+@@ -142,10 +142,6 @@ extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
+ #  ifndef Z_SOLO
+ #    if defined(__MWERKS__) && __dest_os != __be_os && __dest_os != __win32_os
+ #      include <unix.h> /* for fdopen */
+-#    else
+-#      ifndef fdopen
+-#        define fdopen(fd,mode) NULL /* No fdopen() */
+-#      endif
+ #    endif
+ #  endif
+ #endif
+-- 
+2.50.1 (Apple Git-155)
+
