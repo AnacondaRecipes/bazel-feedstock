@@ -14,9 +14,9 @@ fi
 PREFIX_DIR=$(dirname ${PREFIX_DIR})
 
 if [[ "$*" = *"--version"* ]]; then
-  $PREFIX_DIR/bin/bazel-real $*
+  $PREFIX_DIR/bin/bazel-real --batch $*
 elif [[ "$*" != *"--output_user_root"* ]]; then
-  $PREFIX_DIR/bin/bazel-real --output_user_root ${PREFIX_DIR}/share/bazel $*
+  $PREFIX_DIR/bin/bazel-real --batch --output_user_root ${PREFIX_DIR}/share/bazel $*
 else
-  $PREFIX_DIR/bin/bazel-real $*
+  $PREFIX_DIR/bin/bazel-real --batch $*
 fi
