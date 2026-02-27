@@ -2,7 +2,7 @@
 
 set -euxo pipefail
 
-${SRC_DIR}/bazel-${PKG_VERSION}-windows-x86_64.exe --batch --output_base=${SRC_DIR}/out build \
+${SRC_DIR}/bazel-${PKG_VERSION}-windows-x86_64.exe --output_base=${SRC_DIR}/out build \
 	--cxxopt=/std:c++17 \
 	--action_env=PATH \
 	--remote_download_outputs=all \
@@ -27,4 +27,6 @@ dst = os.path.join(os.environ['LIBRARY_PREFIX'], 'bin', 'bazel.exe')
 print('src exists:', os.path.exists(src))
 shutil.copy2(src, dst)
 "
+${SRC_DIR}/bazel-${PKG_VERSION}-windows-x86_64.exe --output_base=${SRC_DIR}/out shutdown || true
+sleep 5
 ${SRC_DIR}/bazel-${PKG_VERSION}-windows-x86_64.exe clean --expunge
