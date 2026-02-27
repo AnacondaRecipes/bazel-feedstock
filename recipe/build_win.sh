@@ -29,4 +29,5 @@ shutil.copy2(src, dst)
 "
 timeout 30 ${SRC_DIR}/bazel-${PKG_VERSION}-windows-x86_64.exe --output_base=${SRC_DIR}/out shutdown || true
 taskkill //F //FI "USERNAME eq $USERNAME" //IM java.exe 2>/dev/null || true
+tasklist //FI "USERNAME eq $USERNAME" 2>/dev/null || true
 exit 0
