@@ -28,5 +28,3 @@ print('src exists:', os.path.exists(src))
 shutil.copy2(src, dst)
 "
 ${SRC_DIR}/bazel-${PKG_VERSION}-windows-x86_64.exe --output_base=${SRC_DIR}/out shutdown || true
-sleep 5
-${SRC_DIR}/bazel-${PKG_VERSION}-windows-x86_64.exe clean --expunge
