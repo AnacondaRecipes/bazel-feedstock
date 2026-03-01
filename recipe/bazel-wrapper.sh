@@ -12,7 +12,8 @@ fi
 
 # Go one level up
 PREFIX_DIR=$(dirname ${PREFIX_DIR})
-
+# FIXME: Since migrating to gRPC 1.78.0, we are seeing spurious hangs with
+# the client/server setup on macOS. Remove again if those are gone.
 if [[ "$*" = *"--version"* ]]; then
   $PREFIX_DIR/bin/bazel-real --batch $*
 elif [[ "$*" != *"--output_user_root"* ]]; then
