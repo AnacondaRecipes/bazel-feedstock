@@ -29,8 +29,8 @@ source:
 
 build:
   number: 0
-  # Still have a problem with running build on windows, protobuf files are required
-  # skip: true # [win]
+  # Still have a problem with signing binaries on windows, will be released manually
+  skip: true # [win]
   ignore_prefix_files: true
   binary_relocation: false
   script_env:
