@@ -1,5 +1,4 @@
 @echo on
-
 :: Delegate to the Unixy script. We need to translate the key path variables
 :: to be Unix-y rather than Windows-y, though.
 set "saved_recipe_dir=%RECIPE_DIR%"
@@ -8,7 +7,7 @@ set "saved_source_dir=%SRC_DIR%"
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%PYTHON%"') DO set "BAZEL_PYTHON=%%i"
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%LIBRARY_PREFIX%\usr\bin\bash.exe"') DO set "BAZEL_SH=%%i"
 
-::FOR /F "delims=" %%i IN ('cygpath.exe -u -p "%PATH%"') DO set "PATH_OVERRIDE=%%i"
+:: FOR /F "delims=" %%i IN ('cygpath.exe -u -p "%PATH%"') DO set "PATH_OVERRIDE=%%i"
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%LIBRARY_PREFIX%"') DO set "LIBRARY_PREFIX=%%i"
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%PREFIX%"') DO set "PREFIX=%%i"
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%PYTHON%"') DO set "PYTHON=%%i"
@@ -16,9 +15,7 @@ FOR /F "delims=" %%i IN ('cygpath.exe -u "%RECIPE_DIR%"') DO set "RECIPE_DIR=%%i
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%SP_DIR%"') DO set "SP_DIR=%%i"
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%SRC_DIR%"') DO set "SRC_DIR=%%i"
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%STDLIB_DIR%"') DO set "STDLIB_DIR=%%i"
-
-:: LIBRARY_PREFIX gets translated to '/' instead of the absolute path
-FOR /F "delims=" %%i IN ('cygpath.exe -u "%PREFIX%"') DO set "JAVA_HOME=%%i/Library"
+FOR /F "delims=" %%i IN ('cygpath.exe -u "%JAVA_HOME%"') DO set "JAVA_HOME=%%i"
 
 :: Need a very short TMPDIR otherwise we hit the max path limit while compiling bazel
 FOR /F "delims=" %%i IN ('cygpath.exe -u "%SYSTEMDRIVE%\t"') DO set "TMPDIR=%%i"
@@ -30,9 +27,6 @@ set CHERE_INVOKING=1
 set "BAZEL_VC=%VSINSTALLDIR%VC"
 set "BAZEL_VS=%VSINSTALLDIR%"
 set "EXTRA_BAZEL_ARGS=--tool_java_runtime_version=21 --java_runtime_version=21"
-
-:: TODO: Can probably remove this whole list once we get this package building in PBP since the reconstructed CBC that
-::       PBP will make should be very small.
 
 :: We need to unset some environment variables to make the java command line short enough
 set AGENT_CLOUDID=
@@ -191,262 +185,9 @@ set RTOOLS44_HOME=
 set RTOOLS45_HOME=
 set R_VER=
 set SBT_HOME=
-
-set aws_checksums=
-set aws_crt_cpp=
-set aws_c_auth=
-set aws_c_cal=
-set aws_c_common=
-set aws_c_compression=
-set aws_c_event_stream=
-set aws_c_http=
-set aws_c_io=
-set aws_c_mqtt=
-set aws_c_s3=
-set aws_c_sdkutils=
-set ffmpeg=
-set fftw=
-set flatbuffers=
-set fmt=
-set fontconfig=
-set fortran_compiler=
-set fortran_compiler_version=
-set freeglut=
-set freetds=
-set freetype=
-set freexl=
-set fribidi=
-set g2clib=
-set gcab=
-set gdbm=
-set gdk_pixbuf=
-set geos=
-set geotiff=
-set getopt_win32=
-set gettext=
-set gflags=
-set giflib=
-set gl2ps=
-set glew=
-set glfw=
-set glib=
-set glog=
-set glpk=
-set glslang=
-set gmp=
-set gnupg=
-set gnutls=
-set go_compiler=
-set go_compiler_version=
-set graphite2=
-set gsl=
-set gstreamer=
-set gstreamer_orc=
-set gst_plugins_base=
-set gst_plugins_good=
-set gtest=
-set gtk3=
-set gts=
-set harfbuzz=
-set hdf4=
-set hdf5=
-set hdfeos2=
-set hdfeos5=
-set hidapi=
-set libaec=
-set libaio=
-set libapr=
-set libapriconv=
-set libaprutil=
-set libarchive=
-set libassuan=
-set libavif=
-set libboost=
-set libboost_devel=
-set libboost_python=
-set libbrotlicommon=
-set libbrotlidec=
-set libbrotlienc=
-set libclang13=
-set libclang_cpp14=
-set libcrc32c=
-set libcryptominisat=
-set libcups=
-set libcurl=
-set libdap4=
-set libde265=
-set libdeflate=
-set libdrm=
-set libebm=
-set libedit=
-set libegl=
-set libev=
-set libevent=
-set libfaiss=
-set libffi=
-set libflac=
-set libflang=
-set libgcrypt=
-set libgd=
-set libgdal=
-set libgdal_core=
-set libgit2=
-set libgl=
-set libgles=
-set libglib=
-set libglu=
-set libglvnd=
-set libglx=
-set libgpg_error=
-set libgsasl=
-set libgsf=
-set libheif=
-set libhiredis=
-set libhwloc=
-set libiconv=
-set libidn2=
-set libjpeg_turbo=
-set libkml=
-set libkrb5=
-set libksba=
-set liblief=
-set libllvm19=
-set libllvm20=
-set libllvm_c19=
-set libllvm_c20=
-set libmamba=
-set libmambapy=
-set libmlir19=
-set libmlir20=
-set libmpdec=
-set libmpdecxx=
-set libnetcdf=
-set libnghttp2=
-set libnl=
-set libnsl=
-set libntlm=
-set libnuma=
-set libogg=
-set libopenblas=
-set libopengl=
-set libopus=
-set libortools=
-set libosqp=
-set libpcap=
-set libpciaccess=
-set libpng=
-set libpq=
-set libqdldl=
-set librdkafka=
-set libre2_11=
-set librsvg=
-set libsentencepiece=
-set libsndfile=
-set libsodium=
-set libspatialindex=
-set libspatialite=
-set libssh2=
-set libtasn1=
-set libtensorflow=
-set libtensorflow_cc=
-set libtheora=
-set libthrift=
-set libtiff=
-set libtmglib=
-set libtorch=
-set libunistring=
-set libunwind=
-set libutf8proc=
-set libuuid=
-set libuv=
-set libvorbis=
-set libvpx=
-set libvulkan=
-set libwebp=
-set libwebp_base=
-set libxcb=
-set libxkbcommon=
-set libxkbfile=
-set libxml2=
-set libxmlsec1=
-set libxslt=
-set libzlib=
-set libzlib_wapi=
-set libzopfli=
-set oniguruma=
-set onnxruntime_cpp=
-set onnxruntime_novec_cpp=
-set openblas=
-set openblas_devel=
-set openh264=
-set openjpeg=
-set openldap=
-set openmpi=
-set orc=
-set proj=
-set ptscotch=
-set pugixml=
-set pyqt=
-set pyqtchart=
-set pyqtwebengine=
-set python_igraph=
-set pytorch=
-set py_lief=
-set qhull=
-set qpdf=
-set qt=
-set quantlib=
-set rdkit=
-set rdma_core=
-set re2=
-set readline=
-set reproc=
-set reproc_cpp=
-set rhash=
-set ruby=
-set rust_compiler=
-set rust_compiler_version=
-set rust_gnu_compiler=
-set rust_gnu_compiler_version=
-set rust_nightly_compiler=
-set rust_nightly_compiler_version=
-set xcb_util=
-set xcb_util_cursor=
-set xcb_util_image=
-set xcb_util_keysyms=
-set xcb_util_renderutil=
-set xcb_util_wm=
-set xerces_c=
-set xorg_libice=
-set xorg_libsm=
-set xorg_libx11=
-set xorg_libxau=
-set xorg_libxcomposite=
-set xorg_libxcursor=
-set xorg_libxdamage=
-set xorg_libxdmcp=
-set xorg_libxext=
-set xorg_libxfixes=
-set xorg_libxft=
-set xorg_libxi=
-set xorg_libxinerama=
-set xorg_libxmu=
-set xorg_libxrandr=
-set xorg_libxrender=
-set xorg_libxscrnsaver=
-set xorg_libxshmfence=
-set xorg_libxt=
-set xorg_libxtst=
-set xorg_libxxf86vm=
-set xorg_xextproto=
-set xorg_xorgproto=
-set xxhash=
 :: show remaining environment variables, in case the list grows enough
 :: to run into "/lib/jvm/bin/java: Argument list too long" again.
 set
 
-set "BAZEL_BUILD_OPTS=--cxxopt=/std:c++17"
-bash -lc "%SRC_DIR%"/compile.sh
+bash -x %RECIPE_DIR%/build_win.sh
 if errorlevel 1 exit 1
-
-copy %saved_source_dir%\output\bazel.exe %LIBRARY_BIN%\
