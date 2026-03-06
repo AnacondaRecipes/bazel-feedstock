@@ -40,6 +40,12 @@ sed -ie "s:\${BUILD_PREFIX}:${BUILD_PREFIX}:" src/tools/singlejar/BUILD
 sed -ie "s:TARGET_CPU:${TARGET_CPU}:" compile.sh
 sed -ie "s:BUILD_CPU:${BUILD_CPU}:" compile.sh
 
+# The bootstrap Bazel (built from scratch via javac) has no BUILD_LABEL, so
+# native.bazel_version returns "" which bazel_features interprets as a dev
+# version newer than any release, enabling globals like `macro` that only
+# exist in Bazel 8+. This env var tells the bootstrap to report the correct version.
+export BAZEL_DEV_VERSION_OVERRIDE="${PKG_VERSION}"
+
 ./compile.sh
 
 mkdir -p $PREFIX/bin/

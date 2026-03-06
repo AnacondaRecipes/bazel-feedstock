@@ -19,13 +19,13 @@ Subject: [PATCH 02/14] Build with native dependencies
  create mode 100644 third_party/systemlibs/protobuf/protobuf.bzl
  create mode 100644 third_party/systemlibs/protobuf_deps.bzl
 
-diff --git a/MODULE.bazel b/MODULE.bazel
-index 84e08db938..c505a78987 100644
+ddiff --git a/MODULE.bazel b/MODULE.bazel
+index 0a5ea5b..39099a3 100755
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
 @@ -15,6 +15,10 @@ module(
  bazel_dep(name = "rules_license", version = "0.0.7")
- bazel_dep(name = "bazel_skylib", version = "1.6.1")
+ bazel_dep(name = "bazel_skylib", version = "1.7.1")
  bazel_dep(name = "protobuf", version = "21.7", repo_name = "com_google_protobuf")
 +local_path_override(
 +    module_name = "protobuf",
@@ -54,7 +54,7 @@ index 84e08db938..c505a78987 100644
      # Don't forget to change this to back to True before submitting your change.
      fail_if_repin_required = True,
 diff --git a/src/main/java/com/google/devtools/build/lib/BUILD b/src/main/java/com/google/devtools/build/lib/BUILD
-index b247593d57..7ba466ea57 100644
+index b247593..7ba466e 100755
 --- a/src/main/java/com/google/devtools/build/lib/BUILD
 +++ b/src/main/java/com/google/devtools/build/lib/BUILD
 @@ -474,7 +474,7 @@ java_library(
@@ -67,13 +67,13 @@ index b247593d57..7ba466ea57 100644
      ],
  )
 diff --git a/third_party/grpc/BUILD b/third_party/grpc/BUILD
-index d8f64ef471..e622c42aac 100644
+index d8f64ef..e622c42 100755
 --- a/third_party/grpc/BUILD
 +++ b/third_party/grpc/BUILD
 @@ -44,28 +44,23 @@ filegroup(
      ],
  )
-
+ 
 -alias(
 +genrule(
      name = "cpp_plugin",
@@ -86,7 +86,7 @@ index d8f64ef471..e622c42aac 100644
 +    executable = 1,
 +    visibility = ["//visibility:public"],
  )
-
+ 
  alias(
      name = "grpc++_codegen_proto",
 -    actual = select({
@@ -95,7 +95,7 @@ index d8f64ef471..e622c42aac 100644
 -    }),
 +    actual = "grpc++_unsecure",
  )
-
+ 
 -alias(
 +cc_library(
      name = "grpc++_unsecure",
@@ -103,10 +103,10 @@ index d8f64ef471..e622c42aac 100644
 -        "//src/conditions:debian_build": "@debian_cc_deps//:grpc++_unsecure",
 -        "//conditions:default": "@com_github_grpc_grpc//:grpc++_unsecure",
 -    }),
-+    linkopts = ["-lgrpc++_unsecure", "-lgrpc_unsecure","-lgpr"],
++    linkopts = ["-lgrpc++", "-lgrpc", "-lgpr", "-labsl_synchronization", "-labsl_strings", "-labsl_status", "-labsl_statusor"],
 +    visibility = ["//visibility:public"],
  )
-
+ 
  filegroup(
 diff --git a/third_party/systemlibs/protobuf/BUILD b/third_party/systemlibs/protobuf/BUILD
 new file mode 100644

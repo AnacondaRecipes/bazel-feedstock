@@ -10,26 +10,26 @@ Subject: [PATCH 11/14] Enable new protobuf major release
  3 files changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/MODULE.bazel b/MODULE.bazel
-index c505a78987..f0c325af10 100644
+index 39099a3..db97f93 100755
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
 @@ -14,7 +14,7 @@ module(
-
+ 
  bazel_dep(name = "rules_license", version = "0.0.7")
- bazel_dep(name = "bazel_skylib", version = "1.6.1")
+ bazel_dep(name = "bazel_skylib", version = "1.7.1")
 -bazel_dep(name = "protobuf", version = "21.7", repo_name = "com_google_protobuf")
 +bazel_dep(name = "protobuf", version = "PROTOC_VERSION", repo_name = "com_google_protobuf")
  local_path_override(
      module_name = "protobuf",
      path = "./third_party/systemlibs/protobuf",
 diff --git a/compile.sh b/compile.sh
-index 7590068b5f..d867758dcb 100755
+index 7590068..d867758 100755
 --- a/compile.sh
 +++ b/compile.sh
 @@ -58,6 +58,10 @@ fi
-
+ 
  source scripts/bootstrap/bootstrap.sh
-
+ 
 +# Make Java code compatible with newer protobuf release now as the bootstrap builds with the old release
 +sed -i 's/includingDefaultValueFields/alwaysPrintFieldsWithNoPresence/g' src/main/java/com/google/devtools/build/lib/util/io/MessageOutputStreamWrapper.java
 +sed -i 's/includingDefaultValueFields/alwaysPrintFieldsWithNoPresence/g' src/main/java/com/google/devtools/build/lib/worker/JsonWorkerMessageProcessor.java

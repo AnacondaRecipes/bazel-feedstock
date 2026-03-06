@@ -1,11 +1,15 @@
 # TODO: Windows code signing is currently disabled as it breaks the build.
 # Similar to https://github.com/bazelbuild/bazel/issues/600 when the binary is stripped.
 # This should be removed once https://anaconda.atlassian.net/browse/PKG-5977 is unblocked.
-content_signing:
-    win-64: False
+# content_signing:
+#     win-64: False
 
 aggregate_check: false
 
 build_parameters:
   - "--suppress-variables"
   - "--skip-existing"
+
+channels:
+  - https://staging.continuum.io/pbp/fs/singlejar-feedstock/pr6/421e13b
+  - https://staging.continuum.io/pbp/fs/ijar-feedstock/pr4/114257f
