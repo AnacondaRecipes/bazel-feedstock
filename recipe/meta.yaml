@@ -37,7 +37,7 @@ build:
   binary_relocation: false
   script_env:
     # The release timestamp of this version.
-    - SOURCE_DATE_EPOCH="1743443520"  # 3/31/2025 1:52 PM EDT
+    - SOURCE_DATE_EPOCH="1772817001"  # 3/6/2026 5:10 PM UTC
 
 requirements:
   build:
