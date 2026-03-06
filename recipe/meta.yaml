@@ -96,7 +96,6 @@ about:
 extra:
   skip-lints:
     - msys2_must_be_in_build  # The build tool posix is not in the build section.
-    - has_run_test_and_commands
   recipe-maintainers:
     - h-vetinari
     - nehaljwani

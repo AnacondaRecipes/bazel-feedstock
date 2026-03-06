@@ -682,6 +682,7 @@ set xxhash=
 set
 
 set "BAZEL_BUILD_OPTS=--cxxopt=/std:c++17"
+set "BAZEL_DEV_VERSION_OVERRIDE=%PKG_VERSION%"
 bash -lc "%SRC_DIR%"/compile.sh
 if errorlevel 1 exit 1
 
