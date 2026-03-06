@@ -35,6 +35,12 @@ build:
   skip: True  # [win]
   ignore_prefix_files: true
   binary_relocation: false
+  # Bazel embeds native binaries in share/bazel/install/<hash>/ that need
+  # relative rpaths back to $PREFIX/lib. These are set explicitly in build.sh.
+  runpath_whitelist:
+    - '$ORIGIN/../lib'                    # bin/bazel-real
+    - '$ORIGIN/../../../../lib'           # share/bazel/install/<hash>/{process-wrapper,linux-sandbox,...}
+    - '$ORIGIN/../../../../../../../lib'  # share/bazel/install/<hash>/embedded_tools/third_party/ijar/zipper.bin
   script_env:
     # The release timestamp of this version.
     - SOURCE_DATE_EPOCH="1772817001"  # 3/6/2026 5:10 PM UTC
