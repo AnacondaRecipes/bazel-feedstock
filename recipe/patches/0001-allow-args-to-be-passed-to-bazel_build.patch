@@ -10,7 +10,7 @@ environment variable.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/compile.sh b/compile.sh
-index 90f2a29f8d..3b75f6e336 100755
+index 90f2a29..3b75f6e 100755
 --- a/compile.sh
 +++ b/compile.sh
 @@ -63,7 +63,7 @@ display "."

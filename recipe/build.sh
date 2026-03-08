@@ -40,6 +40,12 @@ sed -ie "s:\${BUILD_PREFIX}:${BUILD_PREFIX}:" src/tools/singlejar/BUILD
 sed -ie "s:TARGET_CPU:${TARGET_CPU}:" compile.sh
 sed -ie "s:BUILD_CPU:${BUILD_CPU}:" compile.sh
 
+# The bootstrap Bazel (built from scratch via javac) has no BUILD_LABEL, so
+# native.bazel_version returns "" which bazel_features interprets as a dev
+# version newer than any release, enabling globals like `macro` that only
+# exist in Bazel 8+. This env var tells the bootstrap to report the correct version.
+export BAZEL_DEV_VERSION_OVERRIDE="${PKG_VERSION}"
+
 ./compile.sh
 
 mkdir -p $PREFIX/bin/
@@ -73,6 +79,17 @@ for executable in "build-runfiles" "daemonize" "linux-sandbox" "process-wrapper"
     patchelf --set-rpath '$ORIGIN/../../../../lib' $PREFIX/share/bazel/install/${INSTALL_BASE_KEY}/$executable
   fi
 done
+# Embedded tools (e.g. zipper.bin) are at varying depths under embedded_tools/
+# and link against libstdc++/libgcc_s. Fix their rpaths to point to $PREFIX/lib
+# so they resolve from the host prefix rather than the build prefix.
+if [[ "${target_platform}" == linux-* ]]; then
+  for embedded in $(find $PREFIX/share/bazel/install/${INSTALL_BASE_KEY}/embedded_tools -type f -executable); do
+    if patchelf --print-rpath "$embedded" &>/dev/null; then
+      rel_depth=$(python -c "import os.path; print(os.path.relpath('$PREFIX/lib', os.path.dirname('$embedded')))")
+      patchelf --set-rpath "\$ORIGIN/$rel_depth" "$embedded" 2>/dev/null || true
+    fi
+  done
+fi
 
 # Set timestamps to untampered, otherwise bazel will reject the modified files as corrupted.
 find $PREFIX/share/bazel/install/${INSTALL_BASE_KEY} -type f | xargs touch -mt $(($(date '+%Y') + 10))10101010

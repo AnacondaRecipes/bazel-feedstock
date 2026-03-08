@@ -10,13 +10,13 @@ Subject: [PATCH 04/14] Use conda packages for build tools
  3 files changed, 27 insertions(+), 47 deletions(-)
 
 diff --git a/src/tools/singlejar/BUILD b/src/tools/singlejar/BUILD
-index 9d176220ba..a951e7fdbe 100644
+index 9d17622..a951e7f 100755
 --- a/src/tools/singlejar/BUILD
 +++ b/src/tools/singlejar/BUILD
 @@ -69,44 +69,20 @@ release_archive(
      visibility = ["//src:__pkg__"],
  )
-
+ 
 -cc_binary(
 +genrule(
      name = "singlejar",
@@ -40,7 +40,7 @@ index 9d176220ba..a951e7fdbe 100644
 +    executable = 1,
 +    visibility = ["//visibility:public"]
  )
-
+ 
 -cc_binary(
 +genrule(
      name = "singlejar_local",
@@ -66,16 +66,16 @@ index 9d176220ba..a951e7fdbe 100644
 +    executable = 1,
 +    visibility = ["//visibility:public"]
  )
-
+ 
  cc_test(
 diff --git a/third_party/ijar/BUILD b/third_party/ijar/BUILD
-index fbe07892db..d6e99594e1 100644
+index fbe0789..d6e9959 100755
 --- a/third_party/ijar/BUILD
 +++ b/third_party/ijar/BUILD
 @@ -69,21 +69,20 @@ cc_library(
      ],
  )
-
+ 
 -cc_binary(
 +genrule(
      name = "zipper",
@@ -86,7 +86,7 @@ index fbe07892db..d6e99594e1 100644
      visibility = ["//visibility:public"],
 -    deps = [":zip"],
  )
-
+ 
 -cc_binary(
 +genrule(
      name = "ijar",
@@ -100,15 +100,15 @@ index fbe07892db..d6e99594e1 100644
      visibility = ["//visibility:public"],
 -    deps = [":zip"],
  )
-
+ 
  filegroup(
 diff --git a/tools/zip/BUILD.tools b/tools/zip/BUILD.tools
-index 0b8ce85dab..3fc4fee98b 100644
+index 0b8ce85..3fc4fee 100755
 --- a/tools/zip/BUILD.tools
 +++ b/tools/zip/BUILD.tools
 @@ -1,11 +1,16 @@
  package(default_visibility = ["//visibility:public"])
-
+ 
 +genrule(
 +    name = "zipper-exec",
 +    outs = ["zipper.bin"],
@@ -125,5 +125,5 @@ index 0b8ce85dab..3fc4fee98b 100644
 -    }),
 +    srcs = [":zipper-exec"],
  )
-
+ 
  alias(

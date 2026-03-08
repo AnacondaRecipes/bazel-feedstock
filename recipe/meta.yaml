@@ -1,4 +1,4 @@
-{% set version = "7.6.1" %}
+{% set version = "7.7.1" %}
 {% set base_url = "https://github.com/bazelbuild/bazel/releases/download" %}
 
 package:
@@ -7,7 +7,7 @@ package:
 
 source:
   - url: {{ base_url }}/{{ version }}/bazel-{{ version }}-dist.zip
-    sha256: c1106db93eb8a719a6e2e1e9327f41b003b6d7f7e9d04f206057990775a7760e
+    sha256: 6181b3570c2f657d989b1141fb0c1a08eb5f08106ca577dc7dc52e7d0238379a
     patches:
       ## bazel depends on https://github.com/conda-forge/singlejar-feedstock to build,
       ## which patches the same sources; the patches from singlejar should either be
@@ -35,9 +35,15 @@ build:
   skip: True  # [win]
   ignore_prefix_files: true
   binary_relocation: false
+  # Bazel embeds native binaries in share/bazel/install/<hash>/ that need
+  # relative rpaths back to $PREFIX/lib. These are set explicitly in build.sh.
+  runpath_whitelist:
+    - '$ORIGIN/../lib'                    # bin/bazel-real
+    - '$ORIGIN/../../../../lib'           # share/bazel/install/<hash>/{process-wrapper,linux-sandbox,...}
+    - '$ORIGIN/../../../../../../../lib'  # share/bazel/install/<hash>/embedded_tools/third_party/ijar/zipper.bin
   script_env:
     # The release timestamp of this version.
-    - SOURCE_DATE_EPOCH="1743443520"  # 3/31/2025 1:52 PM EDT
+    - SOURCE_DATE_EPOCH="1772817001"  # 3/6/2026 5:10 PM UTC
 
 requirements:
   build:
@@ -54,7 +60,7 @@ requirements:
     - libprotobuf              # [unix]
     - ijar {{ version }}       # [unix]
     - singlejar {{ version }}  # [unix]
-    - bazel-toolchain >=0.2.0  # [unix]
+    - bazel-toolchain 0.3.2    # [unix]
     - zip                      # [linux]
     - unzip                    # [linux]
     - python *                 # [win]
@@ -74,7 +80,7 @@ test:
   requires:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - bazel-toolchain >=0.2  # [unix]
+    - bazel-toolchain 0.3.2  # [unix]
   commands:
     - bazel -h
     - bazel version
@@ -96,7 +102,6 @@ about:
 extra:
   skip-lints:
     - msys2_must_be_in_build  # The build tool posix is not in the build section.
-    - has_run_test_and_commands
   recipe-maintainers:
     - h-vetinari
     - nehaljwani
