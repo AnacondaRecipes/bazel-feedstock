@@ -1,4 +1,4 @@
-{% set version = "8.3.1" %}
+{% set version = "8.6.0" %}
 {% set base_url = "https://github.com/bazelbuild/bazel/releases/download" %}
 
 package:
@@ -7,7 +7,7 @@ package:
 
 source:
   - url: {{ base_url }}/{{ version }}/bazel-{{ version }}-dist.zip
-    sha256: 79da863df05fa4de79a82c4f9d4e710766f040bc519fd8b184a4d4d51345d5ba
+    sha256: 13a84586429b6084b13bd5040d78deda58d523012151e71e7d4be0c63dd831f9
     patches:
       # bazel depends on https://github.com/conda-forge/singlejar-feedstock to build,
       # which patches the same sources; the patches from singlejar should either be
@@ -25,7 +25,7 @@ source:
       - patches/0011-Add-missing-absl-dependency.patch             # [unix]
       - patches/0012-avoid-linking-to-grpc-_unsecure-use-regular-variant-.patch     # [unix]
   - url: {{ base_url }}/{{ version }}/bazel-{{ version }}-windows-x86_64.exe  # [win]
-    sha256: a3349d1d9e2327e03344c47244d4832ab14fc78142d050aa5599d85ee26b5f79  # [win]
+    sha256: 461125dd78dd8c3c27eaf7caacf1c28b3e14062e1a42765c865738209dc820d0  # [win]
 
 build:
   number: 0
@@ -33,9 +33,6 @@ build:
   skip: true # [win]
   ignore_prefix_files: true
   binary_relocation: false
-  script_env:
-    # The release timestamp of this version.
-    - SOURCE_DATE_EPOCH="1751303700"  # 6/30/2025 1:15 PM EDT
 
 requirements:
   build:
