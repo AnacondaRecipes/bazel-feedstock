@@ -1,0 +1,42 @@
+diff --git a/third_party/grpc/build_defs.bzl b/third_party/grpc/build_defs.bzl
+index 1111111..2222222 100644
+--- a/third_party/grpc/build_defs.bzl
++++ b/third_party/grpc/build_defs.bzl
+@@ -28,7 +28,7 @@
+                    "same package as consuming rule").format(ctx.label, s.label))
+     srcdotjar = ctx.actions.declare_file(ctx.label.name + ".jar")
+     srcs = [f for dep in ctx.attr.srcs for f in dep[ProtoInfo].direct_sources]
+-    includes = [f for dep in ctx.attr.srcs for f in dep[ProtoInfo].transitive_imports.to_list()]
++    includes = [f for dep in ctx.attr.srcs for f in dep[ProtoInfo].transitive_sources.to_list()]
+ 
+     ctx.actions.run_shell(
+         command = " ".join([
+
+diff --git a/third_party/grpc/bazel/protobuf.bzl b/third_party/grpc/bazel/protobuf.bzl
+index 1111111..2222222 100644
+--- a/third_party/grpc/bazel/protobuf.bzl
++++ b/third_party/grpc/bazel/protobuf.bzl
+@@ -162,7 +162,7 @@
+     return [
+         file
+         for src in deps
+-        for file in src[ProtoInfo].transitive_imports.to_list()
++        for file in src[ProtoInfo].transitive_sources.to_list()
+     ]
+ 
+ def get_proto_arguments(protos, genfiles_dir_path):
+
+diff --git a/third_party/grpc/bazel/generate_cc.bzl b/third_party/grpc/bazel/generate_cc.bzl
+index 1111111..2222222 100644
+--- a/third_party/grpc/bazel/generate_cc.bzl
++++ b/third_party/grpc/bazel/generate_cc.bzl
+@@ -59,7 +59,7 @@
+     includes = [
+         f
+         for src in ctx.attr.srcs
+-        for f in src[ProtoInfo].transitive_imports.to_list()
++        for f in src[ProtoInfo].transitive_sources.to_list()
+     ]
+     outs = []
+     proto_root = get_proto_root(
+
