@@ -10,8 +10,22 @@ else
   export LDFLAGS="${LDFLAGS} -lpthread -labsl_synchronization -lm"
 fi
 
+# gen-bazel-toolchain runs `$CC -v | head -1 | cut -f3` to locate clang's resource
+# directory. If CC isn't on PATH yet, stderr is "... command not found" and field 3
+# becomes "not", which breaks rules_cc header validation (e.g. @@zlib+//:z).
+if [[ "${c_compiler:-}" == "clang" && -x "${BUILD_PREFIX}/bin/${HOST}-clang" ]]; then
+  export CC="${BUILD_PREFIX}/bin/${HOST}-clang"
+  export CXX="${BUILD_PREFIX}/bin/${HOST}-clang++"
+  export CLANG="${CC##*/}"
+fi
+
 # Generate toolchain and set necessary environment variables
 source gen-bazel-toolchain
+
+_clang_resource_dir="$(basename "$(ls -d "${BUILD_PREFIX}"/lib/clang/[0-9]* 2>/dev/null | sort -V | tail -1)")"
+for cfg in bazel_toolchain/cc_toolchain_config.bzl bazel_toolchain/cc_toolchain_build_config.bzl; do
+  sed -ie "s|/lib/clang/not/include|/lib/clang/${_clang_resource_dir}/include|g" "${cfg}"
+done
 
 if [[ "${target_platform}" == "osx-64" ]]; then
   export TARGET_CPU="darwin"
@@ -27,6 +41,9 @@ export PROTOC=$BUILD_PREFIX/bin/protoc
 export GRPC_JAVA_PLUGIN=$BUILD_PREFIX/bin/grpc_java_plugin
 export ABSEIL_VERSION=$(conda list -p $PREFIX libabseil | grep -v '^#' | tr -s ' ' | cut -f 2 -d ' ')
 export GRPC_VERSION=$(conda list -p $PREFIX libgrpc | grep -v '^#' | tr -s ' ' | cut -f 2 -d ' ')
+# grpc_java_plugin >=1.74 emits ClientCalls.blockingV2UnaryCall; grpc-java must be >=1.74.
+# Use 1.78.0.bcr.1 to match the build plugin without pulling rules_java 9.x (1.82.0 does).
+export GRPC_JAVA_VERSION="1.78.0.bcr.1"
 export PROTOC_VERSION=$(conda list -p $PREFIX libprotobuf | grep -v '^#' | tr -s ' ' | cut -f 2 -d ' ' | sed -E 's/^[0-9]+\.([0-9]+\.[0-9]+)$/\1/')
 export PROTOBUF_JAVA_MAJOR_VERSION="4"
 export BAZEL_BUILD_OPTS="--crosstool_top=//bazel_toolchain:toolchain --define=PROTOBUF_INCLUDE_PATH=${PREFIX}/include --cpu=${TARGET_CPU} --cxxopt=-std=c++17"
@@ -49,8 +66,24 @@ sed -ie "s:BUILD_CPU:${BUILD_CPU}:" compile.sh
 sed -ie "s:ABSEIL_VERSION:${ABSEIL_VERSION}:" third_party/systemlibs/protobuf/MODULE.bazel
 sed -ie "s:ABSEIL_VERSION:${ABSEIL_VERSION}:" MODULE.bazel
 sed -ie "s:GRPC_VERSION:${GRPC_VERSION}:" MODULE.bazel
+sed -E -ie "s/bazel_dep\\(name = \"grpc-java\", version = \"[^\"]*\"\\)/bazel_dep(name = \"grpc-java\", version = \"${GRPC_JAVA_VERSION}\")/" MODULE.bazel
+python3 - <<'PY'
+from pathlib import Path
+
+path = Path("MODULE.bazel")
+text = path.read_text()
+marker = "# Remove once the following PRs are available in a grpc-java release."
+if marker in text:
+    start = text.index(marker)
+    end = text.index("local_path_override(", start)
+    text = text[:start] + text[end:]
+    path.write_text(text)
+PY
 
 cp -ap $PREFIX/share/bazel/protobuf/bazel third_party/systemlibs/protobuf/
+# bazel/upb_*.bzl forward to //upb/bazel:*, which grpc's build rules load.
+# protobuf-bazel-rules installs upb at share/bazel/upb/, not share/bazel/protobuf/upb/.
+cp -ap $PREFIX/share/bazel/upb third_party/systemlibs/protobuf/
 
 ./compile.sh
 
