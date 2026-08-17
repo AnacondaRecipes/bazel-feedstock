@@ -1,4 +1,5 @@
 {% set version = "8.6.0" %}
+{% set protoc_version = "35.1" %}
 {% set base_url = "https://github.com/bazelbuild/bazel/releases/download" %}
 
 package:
@@ -28,6 +29,10 @@ source:
       - patches/0014-use-ProtoInfo.transitive_sources.patch               # [unix]
   - url: {{ base_url }}/{{ version }}/bazel-{{ version }}-windows-x86_64.exe  # [win]
     sha256: 461125dd78dd8c3c27eaf7caacf1c28b3e14062e1a42765c865738209dc820d0  # [win]
+  # grpc's build rules load //upb/bazel:*; protobuf-bazel-rules only ships bazel/
+  - url: https://github.com/protocolbuffers/protobuf/releases/download/v{{ protoc_version }}/protobuf-{{ protoc_version }}.tar.gz  # [unix]
+    sha256: f0b6838e7522a8da96126d487068c959bc624926368f3024ac8fd03abd0a1ac4  # [unix]
+    folder: protobuf-upb  # [unix]
 
 build:
   number: 1
@@ -48,7 +53,7 @@ requirements:
     # Stage 003 rebuilt 1.78.0 against libprotobuf 7.35.1; drop the old <1.74 ceiling
     - grpc_java_plugin 1.78.*  # [unix]
     - libgrpc 1.82.1           # [unix]
-    - libprotobuf 7.35.1       # [unix]
+    - libprotobuf 7.{{ protoc_version }}       # [unix]
     - ijar {{ version }}       # [unix]
     - singlejar {{ version }}  # [unix]
     - bazel-toolchain >=0.2.0,<0.5.0  # [unix]
@@ -58,9 +63,8 @@ requirements:
   host:
     - libabseil 20260526.0            # [unix]
     - libgrpc 1.82.1                  # [unix]
-    - libprotobuf 7.35.1              # [unix]
-    # needs the build that ships upb/bazel, which grpc's build rules load
-    - protobuf-bazel-rules >=35.1     # [unix]
+    - libprotobuf 7.{{ protoc_version }}              # [unix]
+    - protobuf-bazel-rules            # [unix]
     - openjdk 21.*                    # [win]
     - msys2-posix 1                   # [win]
   run:
