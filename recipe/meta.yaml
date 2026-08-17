@@ -29,10 +29,6 @@ source:
       - patches/0014-use-ProtoInfo.transitive_sources.patch               # [unix]
   - url: {{ base_url }}/{{ version }}/bazel-{{ version }}-windows-x86_64.exe  # [win]
     sha256: 461125dd78dd8c3c27eaf7caacf1c28b3e14062e1a42765c865738209dc820d0  # [win]
-  # grpc's build rules load //upb/bazel:*; protobuf-bazel-rules only ships bazel/
-  - url: https://github.com/protocolbuffers/protobuf/releases/download/v{{ protoc_version }}/protobuf-{{ protoc_version }}.tar.gz  # [unix]
-    sha256: f0b6838e7522a8da96126d487068c959bc624926368f3024ac8fd03abd0a1ac4  # [unix]
-    folder: protobuf-upb  # [unix]
 
 build:
   number: 1
@@ -64,7 +60,8 @@ requirements:
     - libabseil 20260526.0            # [unix]
     - libgrpc 1.82.1                  # [unix]
     - libprotobuf 7.{{ protoc_version }}              # [unix]
-    - protobuf-bazel-rules            # [unix]
+    # ships bazel/ and upb/ for grpc's build rules
+    - protobuf-bazel-rules >=35.1     # [unix]
     - openjdk 21.*                    # [win]
     - msys2-posix 1                   # [win]
   run:

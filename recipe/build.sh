@@ -81,9 +81,8 @@ if marker in text:
 PY
 
 cp -ap $PREFIX/share/bazel/protobuf/bazel third_party/systemlibs/protobuf/
-# bazel/upb_*.bzl forward to //upb/bazel:*, which grpc's build rules load.
-# protobuf-bazel-rules ships bazel/ only; upb/ lives in the protobuf source tree.
-cp -ap "${SRC_DIR}/protobuf-upb/upb" third_party/systemlibs/protobuf/
+# bazel/upb_*.bzl forward to //upb/bazel:*, which grpc's build rules load
+cp -ap $PREFIX/share/bazel/protobuf/upb third_party/systemlibs/protobuf/
 
 ./compile.sh
 
