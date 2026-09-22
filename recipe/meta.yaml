@@ -27,13 +27,15 @@ source:
       - patches/0012-avoid-linking-to-grpc-_unsecure-use-regular-variant-.patch     # [unix]
       - patches/0013-bump-MODULE.bazel-direct-deps-for-MVS.patch          # [unix]
       - patches/0014-use-ProtoInfo.transitive_sources.patch               # [unix]
-  - url: {{ base_url }}/{{ version }}/bazel-{{ version }}-windows-x86_64.exe  # [win]
-    sha256: 461125dd78dd8c3c27eaf7caacf1c28b3e14062e1a42765c865738209dc820d0  # [win]
+  - url: {{ base_url }}/{{ version }}/bazel-{{ version }}-windows-x86_64.exe  # [win and x86_64]
+    sha256: 461125dd78dd8c3c27eaf7caacf1c28b3e14062e1a42765c865738209dc820d0  # [win and x86_64]
+  - url: {{ base_url }}/{{ version }}/bazel-{{ version }}-windows-arm64.exe  # [win and arm64]
+    sha256: 1a62b206c6b8bf8da38f353e2c60c21941834bb46dd4073de0ba6f9837a68d38  # [win and arm64]
 
 build:
   number: 1
   # Still have a problem with signing binaries on windows, will be released manually
-  skip: true # [win]
+  # skip: true # [win]
   ignore_prefix_files: true
   binary_relocation: false
 
@@ -62,7 +64,7 @@ requirements:
     - libprotobuf 7.{{ protoc_version }}              # [unix]
     # ships bazel/ and upb/ for grpc's build rules
     - protobuf-bazel-rules >=35.1     # [unix]
-    - openjdk 21.*                    # [win]
+    - openjdk 25.*                    # [win]
     - msys2-posix 1                   # [win]
   run:
     - openjdk >=21

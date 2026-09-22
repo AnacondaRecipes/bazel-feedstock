@@ -2,7 +2,20 @@
 
 set -euxo pipefail
 
-${SRC_DIR}/bazel-${PKG_VERSION}-windows-x86_64.exe --output_base=${SRC_DIR}/out build \
+# conda's $ARCH is "64" for win-64 and "arm64" for win-arm64, while Bazel's
+# release artifacts use "x86_64"/"arm64".
+if [[ ${ARCH} == arm64 ]]; then
+	BAZEL_ARCH=arm64
+	ARCH_ARGS=(--config=windows_arm64)
+else
+	BAZEL_ARCH=x86_64
+	ARCH_ARGS=()
+fi
+
+BAZEL_BOOTSTRAP=${SRC_DIR}/bazel-${PKG_VERSION}-windows-${BAZEL_ARCH}.exe
+
+${BAZEL_BOOTSTRAP} --output_base=${SRC_DIR}/out build \
+	"${ARCH_ARGS[@]}" \
 	--cxxopt=/std:c++17 \
 	--action_env=PATH \
 	--remote_download_outputs=all \
@@ -27,5 +40,5 @@ dst = os.path.join(os.environ['LIBRARY_PREFIX'], 'bin', 'bazel.exe')
 print('src exists:', os.path.exists(src))
 shutil.copy2(src, dst)
 "
-timeout 30 ${SRC_DIR}/bazel-${PKG_VERSION}-windows-x86_64.exe --output_base=${SRC_DIR}/out shutdown || true
+timeout 30 ${BAZEL_BOOTSTRAP} --output_base=${SRC_DIR}/out shutdown || true
 exit 0
