@@ -4,45 +4,46 @@ Date: Sat, 12 Feb 2022 22:08:16 +0100
 Subject: [PATCH 06/11] bazel bin loader path
 
 ---
- src/BUILD | 29 +++++++++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+ src/BUILD | 30 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+), 2 deletions(-)
 
 diff --git a/src/BUILD b/src/BUILD
-index 995c148..9f1f6e9 100755
+index e82cf88..9826b0c 100755
 --- a/src/BUILD
 +++ b/src/BUILD
-@@ -316,16 +316,41 @@ genrule(
+@@ -316,16 +316,42 @@
  )
  
  [genrule(
--    name = "bazel-bin" + suffix,
 +    name = "bazel-bin-install-name" + suffix,
-     srcs = [
-         "//src/main/cpp:client",
++    srcs = [
++        "//src/main/cpp:client",
 +    ],
 +    outs = ["bazel-install-name" + suffix],
 +    cmd = "rm -f $@; cp $(location //src/main/cpp:client) $@; chmod a+rwx $@; ${INSTALL_NAME_TOOL} -rpath ${PREFIX}/lib '@loader_path/../lib/' $@",
 +    executable = 1,
 +    output_to_bindir = 1,
 +    visibility = [
++        "//:__pkg__",  # For distribution archive lockfile generation
 +        "//scripts:__pkg__",  # For bash completion generation
 +        "//scripts/packages:__pkg__",  # For installer generation
 +        "//src/java:__subpackages__",  # For command line reference generation
 +        "//src/test:__subpackages__",  # For integration tests
++        "//tools/compliance:__pkg__",  # For license gathering
 +    ],
 +) for suffix, jdk in [
 +    ("-dev", "_jdk_allmodules"),
 +    ("", "_jdk_minimal"),
 +    ("_jdk_allmodules", "_jdk_allmodules"),
 +    ("_jdk_minimal", "_jdk_minimal"),
-+    ("_dev_jdk", "_dev_jdk"),
 +    ("_notools", "_notools"),
 +    ("_nojdk", "_nojdk"),
 +]]
 +
 +[genrule(
-+    name = "bazel-bin" + suffix,
-+    srcs = [
+     name = "bazel-bin" + suffix,
+     srcs = [
+-        "//src/main/cpp:client",
 +        "bazel-bin-install-name" + suffix,
          "package-zip" + jdk,
      ],
@@ -50,8 +51,8 @@ index 995c148..9f1f6e9 100755
      # In msys, a file path without .exe suffix(say foo), refers to a file with .exe
      # suffix(say foo.exe), if foo.exe exists and foo doesn't. So, on windows, we
      # need to remove bazel.exe first, so that cat to bazel won't fail.
--    cmd = "rm -f $@; cat $(location //src/main/cpp:client) $(location :package-zip" + jdk + ") > $@ && zip -qA $@ && chmod a+x $@",
-+    cmd = "rm -f $@; cat $(location :bazel-bin-install-name" + suffix + ") $(location :package-zip" + jdk + ") > $@ && zip -qA $@ && chmod a+x $@",
+-    cmd = "rm -f $@ $@.unaligned; cat $(location //src/main/cpp:client) $(location :package-zip" + jdk + ") > $@.unaligned && $(location //src/java_tools/singlejar/java/com/google/devtools/build/zip:adjust_sfx) $@.unaligned $@ && rm -f $@.unaligned && chmod a+x $@",
++    cmd = "rm -f $@ $@.unaligned; cat $(location :bazel-bin-install-name" + suffix + ") $(location :package-zip" + jdk + ") > $@.unaligned && $(location //src/java_tools/singlejar/java/com/google/devtools/build/zip:adjust_sfx) $@.unaligned $@ && rm -f $@.unaligned && chmod a+x $@",
      executable = 1,
      output_to_bindir = 1,
-     visibility = [
+     tools = ["//src/java_tools/singlejar/java/com/google/devtools/build/zip:adjust_sfx"],
