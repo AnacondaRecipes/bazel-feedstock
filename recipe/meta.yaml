@@ -35,7 +35,7 @@ source:
 build:
   number: 0
   # Still have a problem with signing binaries on windows, will be released manually
-  # skip: true # [win]
+  skip: true  # [win]
   ignore_prefix_files: true
   binary_relocation: false
 
