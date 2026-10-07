@@ -36,6 +36,8 @@ BAZEL_BOOTSTRAP=${SRC_DIR}/bazel-${PKG_VERSION}-windows-x86_64.exe
 
 ${BAZEL_BOOTSTRAP} --output_base=${SRC_DIR}/out build \
 	"${BUILD_ARGS[@]}" \
+	--stamp \
+	--embed_label="${PKG_VERSION}- (@non-git)" \
 	--cxxopt=/std:c++17 \
 	--action_env=PATH \
 	--remote_download_outputs=all \
