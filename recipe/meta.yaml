@@ -33,7 +33,7 @@ source:
     sha256: 9ebcf286a3df5144ac9d7bebf5fa9d7da3efe187c3b351c94cbc8248efbed070  # [win]
 
 build:
-  number: 0
+  number: 1
   # Still have a problem with signing binaries on windows, will be released manually
   skip: true  # [win]
   ignore_prefix_files: true
