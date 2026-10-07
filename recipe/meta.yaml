@@ -80,6 +80,11 @@ test:
   commands:
     - bazel -h
     - bazel version
+    # Windows-only: `bazel --version` is answered by the client alone, printing
+    # "bazel <build-label>" from the embedded build-label.txt. This fails if the
+    # label is missing (package-bazel.sh's "no_version" fallback), which happens
+    # when build_win.sh forgets --stamp/--embed_label.
+    - bazel --version | findstr /C:"bazel {{ version }}"  # [win]
 
 about:
   home: https://bazel.build
