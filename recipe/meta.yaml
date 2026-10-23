@@ -1,4 +1,4 @@
-{% set version = "8.8.0" %}
+{% set version = "8.8.2" %}
 {% set protoc_version = "35.1" %}
 {% set base_url = "https://github.com/bazelbuild/bazel/releases/download" %}
 
@@ -8,7 +8,7 @@ package:
 
 source:
   - url: {{ base_url }}/{{ version }}/bazel-{{ version }}-dist.zip
-    sha256: 71cea4e6df77d5d85e185db7f238d96db50132bf40c94e4978a35d92eaf42108
+    sha256: d14a2e18a02a1d50ef06ba5fdcf636587d595b41e1661903cfce916df43284a0
     patches:
       # bazel depends on https://github.com/conda-forge/singlejar-feedstock to build,
       # which patches the same sources; the patches from singlejar should either be
@@ -30,10 +30,10 @@ source:
   # Used as the bootstrap for both win-64 and win-arm64; see recipe/build_win.sh
   # for why the x86_64 binary is also used for the arm64 build.
   - url: {{ base_url }}/{{ version }}/bazel-{{ version }}-windows-x86_64.exe  # [win]
-    sha256: 9ebcf286a3df5144ac9d7bebf5fa9d7da3efe187c3b351c94cbc8248efbed070  # [win]
+    sha256: 07e467a78e709a4c9b0dca13da15121b4fcd7c6a037dfb4b17c72e527d4d6785  # [win]
 
 build:
-  number: 1
+  number: 0
   # Still have a problem with signing binaries on windows, will be released manually
   skip: true  # [win]
   ignore_prefix_files: true
