@@ -50,8 +50,8 @@ requirements:
     # we need $BUILD_PREFIX/bin/{grpc_cpp_plugin,grpc_java_plugin,protoc}
     # Stage 003 rebuilt 1.78.0 against libprotobuf 7.35.1; drop the old <1.74 ceiling
     - grpc_java_plugin 1.78.*  # [unix]
-    - libgrpc 1.82.1           # [unix]
-    - libprotobuf 7.{{ protoc_version }}       # [unix]
+    - libgrpc {{ libgrpc }}           # [unix]
+    - libprotobuf {{ libprotobuf }}       # [unix]
     - ijar {{ version }}       # [unix]
     - singlejar {{ version }}  # [unix]
     - bazel-toolchain >=0.2.0,<0.5.0  # [unix]
@@ -59,9 +59,9 @@ requirements:
     - unzip                    # [linux]
     - python *                 # [win]
   host:
-    - libabseil 20260526.0            # [unix]
-    - libgrpc 1.82.1                  # [unix]
-    - libprotobuf 7.{{ protoc_version }}              # [unix]
+    - libabseil {{ libabseil }}          # [unix]
+    - libgrpc {{ libgrpc }}                  # [unix]
+    - libprotobuf {{ libprotobuf }}              # [unix]
     # ships bazel/ and upb/ for grpc's build rules
     - protobuf-bazel-rules >=35.1     # [unix]
     - openjdk 25.*                    # [win]
@@ -85,6 +85,7 @@ test:
     # label is missing (package-bazel.sh's "no_version" fallback), which happens
     # when build_win.sh forgets --stamp/--embed_label.
     - bazel --version | findstr /C:"bazel {{ version }}"  # [win]
+    - bazel --version | grep -F "bazel {{ version }}"  # [unix]
 
 about:
   home: https://bazel.build
