@@ -27,6 +27,7 @@ source:
       - patches/0012-avoid-linking-to-grpc-_unsecure-use-regular-variant-.patch     # [unix]
       - patches/0013-bump-MODULE.bazel-direct-deps-for-MVS.patch          # [unix]
       - patches/0014-use-ProtoInfo.transitive_sources.patch               # [unix]
+      - patches/0015-Link-against-the-system-zlib.patch                   # [unix]
   # Used as the bootstrap for both win-64 and win-arm64; see recipe/build_win.sh
   # for why the x86_64 binary is also used for the arm64 build.
   - url: {{ base_url }}/{{ version }}/bazel-{{ version }}-windows-x86_64.exe  # [win]
@@ -62,6 +63,7 @@ requirements:
     - libabseil {{ libabseil }}          # [unix]
     - libgrpc {{ libgrpc }}                  # [unix]
     - libprotobuf {{ libprotobuf }}              # [unix]
+    - zlib {{ zlib }}                 # [unix]
     # ships bazel/ and upb/ for grpc's build rules
     - protobuf-bazel-rules >=35.1     # [unix]
     - openjdk 25.*                    # [win]
