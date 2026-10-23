@@ -65,7 +65,7 @@ index bd7a639..7759615 100755
 +# The bootstrapped Bazel has no embedded version, so native.bazel_version returns "".
 +# bazel_features treats "" as a dev version (999999.999999.999999), causing rules_cc's
 +# compatibility proxy to incorrectly select the Bazel 9+ code path.
-+export BAZEL_DEV_VERSION_OVERRIDE="8.6.0"
++export BAZEL_DEV_VERSION_OVERRIDE="8.8.2"
 +
 +# Make Java code compatible with newer protobuf release now as the bootstrap builds with the old release
 +sed -i 's/includingDefaultValueFields/alwaysPrintFieldsWithNoPresence/g' src/main/java/com/google/devtools/build/lib/util/io/MessageOutputStreamWrapper.java

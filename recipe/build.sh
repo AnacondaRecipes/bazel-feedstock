@@ -85,6 +85,9 @@ cp -ap $PREFIX/share/bazel/protobuf/bazel third_party/systemlibs/protobuf/
 # protobuf-bazel-rules installs upb at share/bazel/upb/, not share/bazel/protobuf/upb/.
 cp -ap $PREFIX/share/bazel/upb third_party/systemlibs/protobuf/
 
+# compile.sh defaults the label to the first `version =` in MODULE.bazel, which
+# upstream doesn't always bump (the 8.8.2 tag still says 8.8.1).
+export EMBED_LABEL="${PKG_VERSION}"
 ./compile.sh
 
 mkdir -p $PREFIX/bin/

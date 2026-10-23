@@ -12,3 +12,11 @@ aggregate_check: false
 build_parameters:
   - "--suppress-variables"
   - "--skip-existing"
+
+
+# To be removed before merge.
+channels:
+    # ijar
+    - https://package-build.anaconda.com/pkg-orchestrator/v1/channels/graphs/c4f17df9-16cc-4e10-b8c5-f338565d49e2
+    # singlejar
+    - https://package-build.anaconda.com/pkg-orchestrator/v1/channels/graphs/2045ea02-9acc-480b-a787-ade9b7622e7b
