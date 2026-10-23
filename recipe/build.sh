@@ -111,7 +111,16 @@ pushd install-archive
 popd
 mv install-archive $PREFIX/share/bazel/install/${INSTALL_BASE_KEY}
 chmod -R a+w $PREFIX/share/bazel/install/${INSTALL_BASE_KEY}
-for executable in "build-runfiles" "daemonize" "linux-sandbox" "process-wrapper"; do
+# The Starlark CPU profiler is a JNI shared object that lands in this same
+# directory (libcpu_profiler.so / libcpu_profiler.dylib). It needs the same
+# RPATH treatment as the tools below, otherwise it keeps the build-host prefix
+# (…/_h_env_placehold…/lib:…/_build_env/lib) baked in and leaks it into the package.
+if [[ "${target_platform}" == osx-* ]]; then
+  relocatables=("build-runfiles" "daemonize" "linux-sandbox" "process-wrapper" "libcpu_profiler.dylib")
+else
+  relocatables=("build-runfiles" "daemonize" "linux-sandbox" "process-wrapper" "libcpu_profiler.so")
+fi
+for executable in "${relocatables[@]}"; do
   if [[ "${target_platform}" == osx-* ]]; then
     ${INSTALL_NAME_TOOL} -rpath ${PREFIX}/lib '@loader_path/../../../../lib' $PREFIX/share/bazel/install/${INSTALL_BASE_KEY}/$executable
   else
