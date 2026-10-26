@@ -65,6 +65,7 @@ export PROTOC_VERSION=$(conda list -p $PREFIX --json libprotobuf | python3 -c "i
 export PROTOBUF_JAVA_MAJOR_VERSION="4"
 export BAZEL_BUILD_OPTS="--crosstool_top=//bazel_toolchain:toolchain --define=PROTOBUF_INCLUDE_PATH=${PREFIX}/include --cpu=${TARGET_CPU} --cxxopt=-std=c++17"
 export BAZEL_BUILD_OPTS="${BAZEL_BUILD_OPTS} --define=PROTOC_PREFIX=${BUILD_PREFIX}"
+export BAZEL_BUILD_OPTS="${BAZEL_BUILD_OPTS} --host_action_env=PATH=${BUILD_PREFIX}/bin:/bin:/usr/bin:/usr/local/bin"
 export BAZEL_BUILD_OPTS="${BAZEL_BUILD_OPTS} --platforms=//bazel_toolchain:target_platform --host_platform=//bazel_toolchain:build_platform --extra_toolchains=//bazel_toolchain:cc_cf_toolchain --extra_toolchains=//bazel_toolchain:cc_cf_host_toolchain --noincompatible_enable_proto_toolchain_resolution --toolchain_resolution_debug='.*'"
 export EXTRA_BAZEL_ARGS="--tool_java_runtime_version=21 --java_runtime_version=21"
 sed -i "s:\${INSTALL_NAME_TOOL}:${INSTALL_NAME_TOOL:-install_name_tool}:" src/BUILD
