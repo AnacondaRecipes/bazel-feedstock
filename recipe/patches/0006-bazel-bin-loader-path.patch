@@ -1,20 +1,17 @@
-From 7fe067cdf747fb4806c1e7908ab5bc1a61613846 Mon Sep 17 00:00:00 2001
 From: "Uwe L. Korn" <uwe.korn@quantco.com>
 Date: Sat, 12 Feb 2022 22:08:16 +0100
-Subject: [PATCH 06/11] bazel bin loader path
+Subject: [PATCH] bazel bin loader path
 
 ---
- src/BUILD | 30 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+), 2 deletions(-)
-
 diff --git a/src/BUILD b/src/BUILD
-index e82cf88..9826b0c 100755
+index fe4891e..510e00b 100755
 --- a/src/BUILD
 +++ b/src/BUILD
-@@ -316,16 +316,42 @@
+@@ -326,10 +326,36 @@ genrule(
+     }),
  )
  
- [genrule(
++[genrule(
 +    name = "bazel-bin-install-name" + suffix,
 +    srcs = [
 +        "//src/main/cpp:client",
@@ -40,19 +37,11 @@ index e82cf88..9826b0c 100755
 +    ("_nojdk", "_nojdk"),
 +]]
 +
-+[genrule(
+ [bazel_binary(
      name = "bazel-bin" + suffix,
-     srcs = [
--        "//src/main/cpp:client",
-+        "bazel-bin-install-name" + suffix,
-         "package-zip" + jdk,
-     ],
-     outs = ["bazel" + suffix],
-     # In msys, a file path without .exe suffix(say foo), refers to a file with .exe
-     # suffix(say foo.exe), if foo.exe exists and foo doesn't. So, on windows, we
-     # need to remove bazel.exe first, so that cat to bazel won't fail.
--    cmd = "rm -f $@ $@.unaligned; cat $(location //src/main/cpp:client) $(location :package-zip" + jdk + ") > $@.unaligned && $(location //src/java_tools/singlejar/java/com/google/devtools/build/zip:adjust_sfx) $@.unaligned $@ && rm -f $@.unaligned && chmod a+x $@",
-+    cmd = "rm -f $@ $@.unaligned; cat $(location :bazel-bin-install-name" + suffix + ") $(location :package-zip" + jdk + ") > $@.unaligned && $(location //src/java_tools/singlejar/java/com/google/devtools/build/zip:adjust_sfx) $@.unaligned $@ && rm -f $@.unaligned && chmod a+x $@",
-     executable = 1,
-     output_to_bindir = 1,
-     tools = ["//src/java_tools/singlejar/java/com/google/devtools/build/zip:adjust_sfx"],
+     out = "bazel" + suffix,
+-    client = "//src/main/cpp:client",
++    client = ":bazel-bin-install-name" + suffix,
+     package_zip = "package-zip" + jdk,
+     visibility = [
+         "//:__pkg__",  # For distribution archive lockfile generation

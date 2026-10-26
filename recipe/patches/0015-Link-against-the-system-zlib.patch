@@ -1,48 +1,32 @@
-From 4d5926c6cee26c52be294069c7b230e94bc5f136 Mon Sep 17 00:00:00 2001
 From: Eric Lundby <elundby@anaconda.com>
-Date: Fri, 23 Oct 2026 10:43:08 -0600
-Subject: [PATCH 5/5] Link against the system zlib
+Subject: [PATCH] Link against the system zlib
 
-Point the bazel zlib module at the zlib shared library in the conda host prefix, so singlejar and singlejar_local no longer statically link the BCR zlib sources.
+Point the Bazel zlib module at the shared library in the conda host prefix
+instead of statically linking the bundled sources.
 ---
- MODULE.bazel                             |  7 +++++++
- third_party/systemlibs/zlib/BUILD        | 16 ++++++++++++++++
- third_party/systemlibs/zlib/MODULE.bazel |  7 +++++++
- 3 files changed, 30 insertions(+)
- create mode 100644 third_party/systemlibs/zlib/BUILD
- create mode 100644 third_party/systemlibs/zlib/MODULE.bazel
-
 diff --git a/MODULE.bazel b/MODULE.bazel
-index a242263..7868ad0 100755
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
-@@ -48,6 +48,13 @@ local_path_override(
-     path = "./third_party/systemlibs/protobuf",
- )
- 
-+# Use the system zlib instead of the BCR zlib sources, which would otherwise be linked
-+# statically into singlejar and singlejar_local.
+@@ -37,6 +37,10 @@ bazel_dep(name = "rules_testing", version = "0.9.0")
+ bazel_dep(name = "stardoc", version = "0.8.0", repo_name = "io_bazel_skydoc")
+ bazel_dep(name = "with_cfg.bzl", version = "0.13.0")
+ bazel_dep(name = "zlib", version = "1.3.1.bcr.7")
 +local_path_override(
 +    module_name = "zlib",
 +    path = "./third_party/systemlibs/zlib",
 +)
-+
- # TODO: wyv@ - add remoteapis to the BCR
- bazel_dep(name = "remoteapis", version = "")
+ bazel_dep(name = "zstd-jni", version = "1.5.6-9")
  
+ # Depend on apple_support first and then rules_cc so that the Xcode toolchain
 diff --git a/third_party/systemlibs/zlib/BUILD b/third_party/systemlibs/zlib/BUILD
 new file mode 100644
-index 0000000..b23b3d9
 --- /dev/null
 +++ b/third_party/systemlibs/zlib/BUILD
-@@ -0,0 +1,16 @@
+@@ -0,0 +1,13 @@
 +load("@rules_cc//cc:defs.bzl", "cc_library")
 +
 +package(default_visibility = ["//visibility:public"])
 +
-+# Link the zlib shared library from the conda host prefix instead of building the
-+# bundled BCR zlib sources. The headers come from ${PREFIX}/include through the
-+# conda bazel toolchain, and the library from the toolchain's -L${PREFIX}/lib.
 +cc_library(
 +    name = "z",
 +    linkopts = ["-lz"],
@@ -54,17 +38,13 @@ index 0000000..b23b3d9
 +)
 diff --git a/third_party/systemlibs/zlib/MODULE.bazel b/third_party/systemlibs/zlib/MODULE.bazel
 new file mode 100644
-index 0000000..5e9b0c9
 --- /dev/null
 +++ b/third_party/systemlibs/zlib/MODULE.bazel
 @@ -0,0 +1,7 @@
 +module(
 +    name = "zlib",
-+    version = "1.3.1.bcr.5",
++    version = "1.3.1.bcr.7",
 +    compatibility_level = 1,
 +)
 +
-+bazel_dep(name = "rules_cc", version = "0.0.8")
--- 
-2.50.1 (Apple Git-155)
-
++bazel_dep(name = "rules_cc", version = "0.2.17")
