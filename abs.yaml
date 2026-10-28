@@ -12,13 +12,3 @@ aggregate_check: false
 build_parameters:
   - "--suppress-variables"
   - "--skip-existing"
-
-channels:
-    # singlejar
-    - https://package-build.anaconda.com/pkg-orchestrator/v1/channels/graphs/15cb3c67-8048-4d96-b574-f87e0b9dd41d
-    # ijar
-    - https://package-build.anaconda.com/pkg-orchestrator/v1/channels/graphs/50bebf64-9ce1-4196-bb1a-a939f92ec8fe
-    # libabseil-bazel-systemlib
-    - https://package-build.anaconda.com/pkg-orchestrator/v1/channels/graphs/36d66388-c0ea-4e61-b4e2-44f750bbfe08
-    # libprotobuf-bazel-systemlib
-    - https://package-build.anaconda.com/pkg-orchestrator/v1/channels/graphs/ddf6e101-c794-4ffc-93cc-6abbc9a0aba9
