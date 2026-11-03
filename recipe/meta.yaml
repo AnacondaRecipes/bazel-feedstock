@@ -1,4 +1,4 @@
-{% set version = "8.8.2" %}
+{% set version = "9.3.1" %}
 {% set protoc_version = "35.1" %}
 {% set base_url = "https://github.com/bazelbuild/bazel/releases/download" %}
 
@@ -8,7 +8,7 @@ package:
 
 source:
   - url: {{ base_url }}/{{ version }}/bazel-{{ version }}-dist.zip
-    sha256: d14a2e18a02a1d50ef06ba5fdcf636587d595b41e1661903cfce916df43284a0
+    sha256: 6169ed42d506f3466fac899cc0a1ffa05718dece512cde9c2cd5eebf4e9ff4c3
     patches:
       # bazel depends on https://github.com/conda-forge/singlejar-feedstock to build,
       # which patches the same sources; the patches from singlejar should either be
@@ -17,21 +17,14 @@ source:
       - patches/0002-Build-with-native-dependencies.patch          # [unix]
       - patches/0003-use-C-17.patch                                # [unix]
       - patches/0004-Use-conda-packages-for-build-tools.patch      # [unix]
-      - patches/0005-grpc-java-plugin-from-build.patch             # [unix]
       - patches/0006-bazel-bin-loader-path.patch                   # [osx]
       - patches/0007-Adjust-cross-bazel-resultpath.patch           # [unix]
-      - patches/0008-Install-protobuf-via-maven.patch              # [unix]
-      - patches/0009-Adopt-system-libprotobuf.patch                # [unix]
-      - patches/0010-Enable-new-protobuf-major-release.patch       # [unix]
-      - patches/0011-Add-missing-absl-dependency.patch             # [unix]
       - patches/0012-avoid-linking-to-grpc-_unsecure-use-regular-variant-.patch     # [unix]
-      - patches/0013-bump-MODULE.bazel-direct-deps-for-MVS.patch          # [unix]
-      - patches/0014-use-ProtoInfo.transitive_sources.patch               # [unix]
-      - patches/0015-Link-against-the-system-zlib.patch                   # [unix]
+      - patches/0015-Link-against-the-system-zlib.patch            # [unix]
   # Used as the bootstrap for both win-64 and win-arm64; see recipe/build_win.sh
   # for why the x86_64 binary is also used for the arm64 build.
   - url: {{ base_url }}/{{ version }}/bazel-{{ version }}-windows-x86_64.exe  # [win]
-    sha256: 07e467a78e709a4c9b0dca13da15121b4fcd7c6a037dfb4b17c72e527d4d6785  # [win]
+    sha256: 12abcedb177ca1bd293875dd7d5aa1ebf4336cf44d406b597907932251cf9714  # [win]
 
 build:
   number: 0
@@ -48,14 +41,12 @@ requirements:
     - msys2-sed                # [win]
     - sed                      # [unix]
     - openjdk 21.*             # [unix]
-    # we need $BUILD_PREFIX/bin/{grpc_cpp_plugin,grpc_java_plugin,protoc}
-    # Stage 003 rebuilt 1.78.0 against libprotobuf 7.35.1; drop the old <1.74 ceiling
-    - grpc_java_plugin 1.78.*  # [unix]
+    # we need $BUILD_PREFIX/bin/{grpc_cpp_plugin,protoc}
     - libgrpc {{ libgrpc }}           # [unix]
     - libprotobuf {{ libprotobuf }}       # [unix]
     - ijar {{ version }}       # [unix]
     - singlejar {{ version }}  # [unix]
-    - bazel-toolchain >=0.2.0,<0.5.0  # [unix]
+    - bazel-toolchain >=0.5.0  # [unix]
     - zip                      # [linux]
     - unzip                    # [linux]
     - python *                 # [win]
@@ -64,8 +55,11 @@ requirements:
     - libgrpc {{ libgrpc }}                  # [unix]
     - libprotobuf {{ libprotobuf }}              # [unix]
     - zlib {{ zlib }}                 # [unix]
-    # ships bazel/ and upb/ for grpc's build rules
+    # module stubs + Starlark rules used by the systemlibs overrides in 0002
+    - libabseil-bazel-systemlib {{ libabseil }}    # [unix]
+    - libprotobuf-bazel-systemlib {{ libprotobuf }}  # [unix]
     - protobuf-bazel-rules >=35.1     # [unix]
+    - grpc-bazel-rules {{ libgrpc }}  # [unix]
     - openjdk 25.*                    # [win]
     - msys2-posix 1                   # [win]
   run:
@@ -78,7 +72,7 @@ test:
   requires:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - bazel-toolchain >=0.2,<0.5.0  # [unix]
+    - bazel-toolchain >=0.5.0  # [unix]
   commands:
     - bazel -h
     - bazel version
