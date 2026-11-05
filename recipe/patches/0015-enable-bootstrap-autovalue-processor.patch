@@ -1,0 +1,39 @@
+diff --git a/tools/build_rules/java_rules_skylark.bzl b/tools/build_rules/java_rules_skylark.bzl
+--- a/tools/build_rules/java_rules_skylark.bzl
++++ b/tools/build_rules/java_rules_skylark.bzl
+@@ -76,6 +76,8 @@ def _java_library_impl(ctx):
+     if ctx.files.srcs or ctx.files.srcjars:
+         cmd += "%s/bin/javac" % java_runtime.java_home
+         cmd += " " + " ".join(javac_options)
++        if ctx.attr.processors:
++            cmd += " -processor " + ",".join(ctx.attr.processors)
+         if compile_time_jars:
+             cmd += " -classpath '" + _join_paths(ctx.configuration.host_path_separator, compile_time_jars_list) + "'"
+         cmd += " -d " + build_output + files + "\n"
+@@ -219,6 +221,7 @@ java_library_attrs = {
+     "srcs": attr.label_list(allow_files = [".java"]),
+     "jars": attr.label_list(allow_files = [".jar"]),
+     "neverlink_jars": attr.label_list(allow_files = [".jar"]),
++    "processors": attr.string_list(),
+     "srcjars": attr.label_list(allow_files = [".jar", ".srcjar"]),
+     "deps": attr.label_list(
+         allow_files = False,
+diff --git a/src/java_tools/buildjar/java/com/google/devtools/build/buildjar/BUILD b/src/java_tools/buildjar/java/com/google/devtools/build/buildjar/BUILD
+--- a/src/java_tools/buildjar/java/com/google/devtools/build/buildjar/BUILD
++++ b/src/java_tools/buildjar/java/com/google/devtools/build/buildjar/BUILD
+@@ -198,6 +198,7 @@ bootstrap_java_library(
+         "//third_party:auto_value-jars",
+         "//third_party:bootstrap_guava_and_error_prone-jars",
+     ],
++    processors = ["com.google.auto.value.processor.AutoValueProcessor"],
+     tags = ["manual"],
+ )
+ 
+@@ -214,6 +215,7 @@ bootstrap_java_binary(
+     ],
+     main_class = "com.google.devtools.build.buildjar.VanillaJavaBuilder",
+     neverlink_jars = ["//third_party:auto_value-jars"],
++    processors = ["com.google.auto.value.processor.AutoValueProcessor"],
+     tags = ["manual"],
+     deps = [
+         ":starlark-deps",

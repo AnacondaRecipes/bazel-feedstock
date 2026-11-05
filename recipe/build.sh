@@ -23,7 +23,7 @@ export PROTOC_VERSION=$(conda list -p $PREFIX libprotobuf | grep -v '^#' | tr -s
 export PROTOBUF_JAVA_MAJOR_VERSION="4"
 export BAZEL_BUILD_OPTS="--crosstool_top=//bazel_toolchain:toolchain --define=PROTOBUF_INCLUDE_PATH=${PREFIX}/include --cpu=${TARGET_CPU} --cxxopt=-std=c++17"
 export BAZEL_BUILD_OPTS="${BAZEL_BUILD_OPTS} --platforms=//bazel_toolchain:target_platform --host_platform=//bazel_toolchain:build_platform --extra_toolchains=//bazel_toolchain:cc_cf_toolchain --extra_toolchains=//bazel_toolchain:cc_cf_host_toolchain --toolchain_resolution_debug='.*'"
-export EXTRA_BAZEL_ARGS="--tool_java_runtime_version=21 --java_runtime_version=21"
+export EXTRA_BAZEL_ARGS="--tool_java_runtime_version=25 --java_runtime_version=25"
 sed -ie "s:PROTOC_VERSION:${PROTOC_VERSION}:" WORKSPACE
 sed -ie "s:PROTOBUF_JAVA_MAJOR_VERSION:${PROTOBUF_JAVA_MAJOR_VERSION}:" WORKSPACE
 sed -ie "s:PROTOC_VERSION:${PROTOC_VERSION}:" MODULE.bazel
@@ -45,6 +45,7 @@ sed -ie "s:BUILD_CPU:${BUILD_CPU}:" compile.sh
 # version newer than any release, enabling globals like `macro` that only
 # exist in Bazel 8+. This env var tells the bootstrap to report the correct version.
 export BAZEL_DEV_VERSION_OVERRIDE="${PKG_VERSION}"
+export BAZEL_JAVAC_OPTS="${BAZEL_JAVAC_OPTS:-} -proc:full"
 
 ./compile.sh
 
