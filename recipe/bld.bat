@@ -29,7 +29,7 @@ set MSYS2_PATH_TYPE=inherit
 set CHERE_INVOKING=1
 set "BAZEL_VC=%VSINSTALLDIR%VC"
 set "BAZEL_VS=%VSINSTALLDIR%"
-set "EXTRA_BAZEL_ARGS=--tool_java_runtime_version=21 --java_runtime_version=21"
+set "EXTRA_BAZEL_ARGS=--tool_java_runtime_version=25 --java_runtime_version=25"
 
 :: TODO: Can probably remove this whole list once we get this package building in PBP since the reconstructed CBC that
 ::       PBP will make should be very small.
@@ -683,6 +683,7 @@ set
 
 set "BAZEL_BUILD_OPTS=--cxxopt=/std:c++17"
 set "BAZEL_DEV_VERSION_OVERRIDE=%PKG_VERSION%"
+set "BAZEL_JAVAC_OPTS=%BAZEL_JAVAC_OPTS% -proc:full"
 bash -lc "%SRC_DIR%"/compile.sh
 if errorlevel 1 exit 1
 
